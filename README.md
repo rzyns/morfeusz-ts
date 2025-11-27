@@ -15,7 +15,9 @@ This package provides high-fidelity TypeScript bindings for [Morfeusz 2](http://
 
 ## Prerequisites
 
-Before installing, you need to have libmorfeusz2 installed on your system:
+**Note:** This package currently includes a stub implementation for development purposes. For production use with actual morphological analysis, you'll need to install the real libmorfeusz2 library and update the build configuration. See [STUB_IMPLEMENTATION.md](STUB_IMPLEMENTATION.md) for details.
+
+Before installing for production use, you need to have libmorfeusz2 installed on your system:
 
 ### Ubuntu/Debian
 ```bash

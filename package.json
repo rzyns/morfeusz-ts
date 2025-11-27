@@ -22,7 +22,7 @@
     "typescript",
     "bindings"
   ],
-  "author": "",
+  "author": "morfeusz-ts contributors",
   "license": "BSD-2-Clause",
   "dependencies": {
     "bindings": "^1.5.0",
