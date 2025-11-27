@@ -31,26 +31,16 @@ Follow instructions at [http://morfeusz.sgjp.pl/](http://morfeusz.sgjp.pl/)
 
 ### 2. Update binding.gyp
 
-Edit `binding.gyp` to link against the real library:
+Replace the current `binding.gyp` with the production version:
+
+```bash
+cp binding.gyp.production binding.gyp
+```
+
+Or manually update the `libraries` array:
 
 ```json
-{
-  "targets": [
-    {
-      "target_name": "morfeusz2",
-      "sources": ["native/morfeusz_wrapper.cpp"],
-      "include_dirs": [
-        "<!@(node -p \"require('node-addon-api').include\")",
-        "/usr/local/include",
-        "/usr/include"
-      ],
-      "libraries": [
-        "-lmorfeusz2"
-      ],
-      ...
-    }
-  ]
-}
+"libraries": ["-lmorfeusz2"]
 ```
 
 ### 3. Remove or Update Stub Header

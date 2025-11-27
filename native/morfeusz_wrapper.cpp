@@ -9,6 +9,9 @@
 using namespace morfeusz;
 
 // Global storage for constructors
+// NOTE: Using raw pointers here. In a production implementation, consider using
+// std::unique_ptr or implementing proper module cleanup in NODE_API_MODULE finalizer
+// to prevent memory leaks when the module is unloaded.
 static std::map<std::string, Napi::FunctionReference*> constructors;
 
 // Helper to convert MorphInterpretation to JS object

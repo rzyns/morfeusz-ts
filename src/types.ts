@@ -55,8 +55,8 @@ export enum TokenNumbering {
    */
   SEPARATE_NUMBERING = 201,
   /**
-   * Also start from 0. Reset counter for every invocation of 
-   * Morfeusz.setTokenNumbering only.
+   * Also start from 0. Reset counter only when setTokenNumbering() is called
+   * on the instance.
    */
   CONTINUOUS_NUMBERING = 202
 }
