@@ -1,0 +1,41 @@
+{
+  "name": "morfeusz-ts",
+  "version": "0.1.0",
+  "description": "TypeScript bindings for Morfeusz 2 - Polish morphological analyzer",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "npm run build:native && npm run build:ts",
+    "build:native": "node-gyp rebuild",
+    "build:ts": "tsc",
+    "clean": "rm -rf build dist",
+    "prepublishOnly": "npm run build",
+    "test": "node test/test.js"
+  },
+  "keywords": [
+    "morfeusz",
+    "morfeusz2",
+    "polish",
+    "nlp",
+    "morphology",
+    "analyzer",
+    "typescript",
+    "bindings"
+  ],
+  "author": "morfeusz-ts contributors",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "bindings": "^1.5.0",
+    "node-addon-api": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/bindings": "^1.5.5",
+    "@types/node": "^20.0.0",
+    "node-gyp": "^10.0.0",
+    "typescript": "^5.3.0"
+  },
+  "gypfile": true,
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
