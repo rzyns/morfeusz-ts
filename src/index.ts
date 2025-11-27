@@ -9,25 +9,27 @@
  * @module morfeusz-ts
  */
 
-import * as bindings from 'bindings';
+import bindings = require('bindings');
 import type {
   MorphInterpretation,
   MorphInterpretationChecks,
   IdResolver,
   Morfeusz,
   MorfeuszStatic,
-  Charset,
-  TokenNumbering,
-  CaseHandling,
-  WhitespaceHandling,
-  MorfeuszUsage,
-  NodeIndex,
   TagId,
   NameId,
   LabelsId,
 } from './types';
 
 export * from './types';
+
+import {
+  Charset,
+  TokenNumbering,
+  CaseHandling,
+  WhitespaceHandling,
+  MorfeuszUsage,
+} from './types';
 
 /**
  * Native module bindings

@@ -4,8 +4,12 @@
 #include <vector>
 #include <set>
 #include <string>
+#include <map>
 
 using namespace morfeusz;
+
+// Global storage for constructors
+static std::map<std::string, Napi::FunctionReference*> constructors;
 
 // Helper to convert MorphInterpretation to JS object
 Napi::Object MorphInterpToJS(Napi::Env env, const MorphInterpretation& interp, const Morfeusz* morfeusz) {
@@ -65,9 +69,8 @@ Napi::Object IdResolverWrapper::Init(Napi::Env env, Napi::Object exports) {
         InstanceMethod("getLabelsCount", &IdResolverWrapper::GetLabelsCount)
     });
     
-    Napi::FunctionReference* constructor = new Napi::FunctionReference();
-    *constructor = Napi::Persistent(func);
-    env.SetInstanceData(constructor);
+    constructors["IdResolver"] = new Napi::FunctionReference();
+    *constructors["IdResolver"] = Napi::Persistent(func);
     
     return exports;
 }
@@ -275,9 +278,8 @@ Napi::Object MorfeuszInstanceWrapper::Init(Napi::Env env, Napi::Object exports) 
         InstanceMethod("getIdResolver", &MorfeuszInstanceWrapper::GetIdResolver)
     });
     
-    Napi::FunctionReference* constructor = new Napi::FunctionReference();
-    *constructor = Napi::Persistent(func);
-    env.SetInstanceData(constructor);
+    constructors["MorfeuszInstance"] = new Napi::FunctionReference();
+    *constructors["MorfeuszInstance"] = Napi::Persistent(func);
     
     return exports;
 }
@@ -536,8 +538,7 @@ Napi::Value MorfeuszInstanceWrapper::GetIdResolver(const Napi::CallbackInfo& inf
         return env.Null();
     }
     
-    Napi::FunctionReference* constructor = env.GetInstanceData<Napi::FunctionReference>();
-    Napi::Object resolverObj = constructor->New({});
+    Napi::Object resolverObj = constructors["IdResolver"]->New({});
     IdResolverWrapper* wrapper = IdResolverWrapper::Unwrap(resolverObj);
     wrapper->SetResolver(&morfeusz->getIdResolver());
     
@@ -571,8 +572,7 @@ Napi::Value CreateInstance(const Napi::CallbackInfo& info) {
     try {
         Morfeusz* morfeusz = Morfeusz::createInstance(usage);
         
-        Napi::FunctionReference* constructor = env.GetInstanceData<Napi::FunctionReference>();
-        Napi::Object instanceObj = constructor->New({});
+        Napi::Object instanceObj = constructors["MorfeuszInstance"]->New({});
         MorfeuszInstanceWrapper* wrapper = MorfeuszInstanceWrapper::Unwrap(instanceObj);
         wrapper->SetInstance(morfeusz);
         
@@ -595,8 +595,7 @@ Napi::Value CreateInstanceWithDict(const Napi::CallbackInfo& info) {
     try {
         Morfeusz* morfeusz = Morfeusz::createInstance(dictName, usage);
         
-        Napi::FunctionReference* constructor = env.GetInstanceData<Napi::FunctionReference>();
-        Napi::Object instanceObj = constructor->New({});
+        Napi::Object instanceObj = constructors["MorfeuszInstance"]->New({});
         MorfeuszInstanceWrapper* wrapper = MorfeuszInstanceWrapper::Unwrap(instanceObj);
         wrapper->SetInstance(morfeusz);
         
