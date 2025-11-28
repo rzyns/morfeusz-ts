@@ -1,0 +1,4 @@
+{
+    "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+    "typescript.tsserver.web.projectWideIntellisense.enabled": true
+}
