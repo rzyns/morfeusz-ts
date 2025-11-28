@@ -10,6 +10,8 @@
  */
 
 import bindings = require('bindings');
+import path = require('path');
+import { allPresent as dictsPresent, dictDir, required as requiredDicts } from '../scripts/check-dicts';
 import type {
   MorphInterpretation,
   MorphInterpretationChecks,
@@ -213,37 +215,49 @@ class MorfeuszWrapper implements Morfeusz {
 /**
  * Static factory methods and utilities
  */
-export const MorfeuszFactory: MorfeuszStatic = {
-  getVersion(): string {
-    return native.getVersion();
-  },
-  
-  getDefaultDictName(): string {
-    return native.getDefaultDictName();
-  },
-  
-  getCopyright(): string {
-    return native.getCopyright();
-  },
-  
-  createInstance(
-    usageOrDictName?: MorfeuszUsage | string,
-    usage: MorfeuszUsage = MorfeuszUsage.BOTH_ANALYSE_AND_GENERATE
-  ): Morfeusz {
-    let nativeInstance: NativeMorfeuszInstance;
-    
-    if (typeof usageOrDictName === 'string') {
-      // Called with dictName and optional usage
-      nativeInstance = native.createInstanceWithDict(usageOrDictName, usage);
-    } else {
-      // Called with optional usage
-      const actualUsage = usageOrDictName ?? MorfeuszUsage.BOTH_ANALYSE_AND_GENERATE;
-      nativeInstance = native.createInstance(actualUsage);
+function ensureDictionariesOrThrow() {
+  if (!dictsPresent()) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const fs = require('fs');
+    const missing = requiredDicts.filter((f: string) => !fs.existsSync(path.join(dictDir, f)));
+    if (missing.length > 0) {
+      throw new Error(
+        `Morfeusz dictionaries not found.\n` +
+        `Missing: ${missing.join(', ')}\n` +
+        `Please run: npm run setup-dicts\n` +
+        `See README for details.`
+      );
     }
-    
-    return new MorfeuszWrapper(nativeInstance);
   }
-};
+}
+  export const MorfeuszFactory: MorfeuszStatic = {
+    getVersion(): string {
+      return native.getVersion();
+    },
+
+    getDefaultDictName(): string {
+      return native.getDefaultDictName();
+    },
+
+    getCopyright(): string {
+      return native.getCopyright();
+    },
+
+    createInstance(
+      usageOrDictName?: MorfeuszUsage | string,
+      usage: MorfeuszUsage = MorfeuszUsage.BOTH_ANALYSE_AND_GENERATE
+    ): Morfeusz {
+      ensureDictionariesOrThrow();
+      let nativeInstance: NativeMorfeuszInstance;
+      if (typeof usageOrDictName === 'string') {
+        nativeInstance = native.createInstanceWithDict(usageOrDictName, usage);
+      } else {
+        const actualUsage = usageOrDictName ?? MorfeuszUsage.BOTH_ANALYSE_AND_GENERATE;
+        nativeInstance = native.createInstance(actualUsage);
+      }
+      return new MorfeuszWrapper(nativeInstance);
+    }
+  };
 
 /**
  * Helper utilities for working with MorphInterpretation

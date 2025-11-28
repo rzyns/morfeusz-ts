@@ -181,6 +181,45 @@ console.log('Copyright:', MorfeuszFactory.getCopyright());
 console.log('Default dictionary:', MorfeuszFactory.getDefaultDictName());
 ```
 
+## Dictionaries & Installation Strategy
+
+Morfeusz requires dictionary data (e.g. SGJP) accessible to the native library. This package aims to be flexible and not silently download large external resources without user intent.
+
+### Where Dictionaries Come From
+1. **System packages (preferred)**: On Debian/Ubuntu, installing `libmorfeusz2-dev` (or related runtime package) typically places dictionaries where the library can find them.
+2. **Manual download**: From the official site: http://morfeusz.sgjp.pl/download/en
+3. **Automated (opt-in)**: A `postinstall` script checks for an empty dictionary directory and will attempt a download *only if* you provide an explicit URL via an environment variable.
+
+### Postinstall Behavior
+The script at `scripts/postinstall.js` runs after `npm install`:
+- Detects presence of `libmorfeusz2` via `ldconfig` (Linux heuristic).
+- Ensures a dictionary directory (default: `dictionaries/` inside the package) exists.
+- Skips auto-download unless `MORFEUSZ_SGJP_URL` is set.
+- If a download occurs, saves the archive and prints extraction instructions; it does **not** fail the install on network errors.
+
+### Environment Variables
+- `MORFEUSZ_SKIP_DICT_DOWNLOAD=1` — Disable any download logic.
+- `MORFEUSZ_DICT_DIR=/custom/path` — Override target dictionary directory.
+- `MORFEUSZ_SGJP_URL=https://example/sgjp-dict.tar.gz` — Enable and specify archive download URL.
+- `MORFEUSZ_SGJP_ARCHIVE_NAME=my-sgjp.tar.gz` — Override saved filename.
+
+### Recommended Production Setup
+Install the official library and dictionaries via your OS package manager when available. Use the environment variables only for CI or controlled deployments where you manage artifact URLs and checksums.
+
+### Verifying Availability
+After install/build:
+```bash
+node -e "const f=require('morfeusz-ts');console.log(f.getDefaultDictName())"
+```
+If you are still seeing a stub default (e.g. `stub-dict`) you are linking against the stub implementation instead of the real library.
+
+### Security & Reproducibility Notes
+- No implicit network calls: you must opt in.
+- Consider pinning a checksum (CI step) for downloaded archives.
+- Avoid committing large dictionary data to VCS; keep in artifacts/cache.
+
+See `STUB_IMPLEMENTATION.md` for details on substituting real library behavior.
+
 ## API Documentation
 
 ### Types
