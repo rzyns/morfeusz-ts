@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S node --experimental-transform-types
 /**
  * Setup script for morfeusz-ts: downloads SGJP and Polimorf dictionaries from official sources.
  *
@@ -31,6 +31,7 @@ const DICTS = [
   }
 ];
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const dictDir = path.join(__dirname, '..', 'dictionaries');
 if (!fs.existsSync(dictDir)) fs.mkdirSync(dictDir, { recursive: true });
 

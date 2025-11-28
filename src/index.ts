@@ -12,7 +12,7 @@
 import bindings from 'bindings';
 import * as path from 'path';
 import * as fs from 'fs';
-import { allPresent as dictsPresent, dictDir, required as requiredDicts } from '../scripts/check-dicts';
+import { allPresent as dictsPresent, dictDir, required as requiredDicts } from './check-dicts.js';
 import type {
   MorphInterpretation,
   MorphInterpretationChecks,
@@ -22,9 +22,9 @@ import type {
   TagId,
   NameId,
   LabelsId,
-} from './types';
+} from './types.js';
 
-export * from './types';
+export * from './types.js';
 
 import {
   Charset,
@@ -32,7 +32,7 @@ import {
   CaseHandling,
   WhitespaceHandling,
   MorfeuszUsage,
-} from './types';
+} from './types.js';
 
 /**
  * Native module bindings
