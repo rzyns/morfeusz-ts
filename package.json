@@ -2,6 +2,7 @@
   "name": "morfeusz-ts",
   "version": "0.1.0",
   "description": "TypeScript bindings for Morfeusz 2 - Polish morphological analyzer",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -9,8 +10,9 @@
     "build:native": "node-gyp rebuild",
     "build:ts": "tsc",
     "clean": "rm -rf build dist",
+    "lint": "eslint",
     "prepublishOnly": "npm run build",
-    "test": "node --enable-source-maps test/test.js",
+    "test": "npm run build:native && vitest run",
     "setup-dicts": "node scripts/setup.js"
   },
   "keywords": [
@@ -30,11 +32,18 @@
     "node-addon-api": "^8.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@eslint/json": "^0.14.0",
     "@types/bindings": "^1.5.5",
     "@types/node": "^20.0.0",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "jiti": "^2.6.1",
     "node-gyp": "^10.0.0",
     "tsx": "^4.20.6",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "typescript-eslint": "^8.48.0",
+    "vitest": "^4.0.14"
   },
   "gypfile": true,
   "engines": {

@@ -9,8 +9,9 @@
  * @module morfeusz-ts
  */
 
-import bindings = require('bindings');
-import path = require('path');
+import bindings from 'bindings';
+import * as path from 'path';
+import * as fs from 'fs';
 import { allPresent as dictsPresent, dictDir, required as requiredDicts } from '../scripts/check-dicts';
 import type {
   MorphInterpretation,
@@ -217,8 +218,6 @@ class MorfeuszWrapper implements Morfeusz {
  */
 function ensureDictionariesOrThrow() {
   if (!dictsPresent()) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const fs = require('fs');
     const missing = requiredDicts.filter((f: string) => !fs.existsSync(path.join(dictDir, f)));
     if (missing.length > 0) {
       throw new Error(

@@ -18,11 +18,10 @@
  *       licensing / reproducibility concerns. Provide MORFEUSZ_SGJP_URL to enable.
  */
 
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
-const https = require('https');
-const { spawnSync } = require('child_process');
+import * as fs from "node:fs";
+import * as path from "node:path";
+import * as https from "node:https";
+import { spawnSync } from "node:child_process";
 
 function log(msg) {
   console.log(`[morfeusz-ts dict setup] ${msg}`);

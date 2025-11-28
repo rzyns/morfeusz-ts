@@ -15,7 +15,7 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "isolatedDeclarations": true,
+    "isolatedDeclarations": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "build"]

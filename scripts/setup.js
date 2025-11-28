@@ -9,11 +9,11 @@
  *
  * This script does NOT host or redistribute dictionary files.
  */
-const fs = require('fs');
-const path = require('path');
-const https = require('https');
-const http = require('http');
-const { spawnSync } = require('child_process');
+import * as fs from "node:fs";
+import * as path from "node:path";
+import * as https from "node:https";
+import * as http from "node:http";
+import { spawnSync } from "node:child_process";
 
 const DICTS = [
   {
