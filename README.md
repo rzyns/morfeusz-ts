@@ -71,13 +71,15 @@ npm run setup-dicts
 If `MORFEUSZ_VERIFY_CHECKSUMS=1` is set but a specific checksum variable is missing, verification for that archive is skipped with a warning.
 
 ### Semantic Release (Primary Automation)
-This repository uses semantic-release as the sole release/publish mechanism. Workflow `semantic-release.yml` runs on `development` and will:
+This repository uses semantic-release as the sole release/publish mechanism. Workflow `semantic-release.yml` now runs only after the `CI` workflow finishes successfully on the `development` branch (via a `workflow_run` trigger) and can also be invoked manually (`workflow_dispatch`). It will:
 - Analyze commits (Conventional Commits) to determine next version
 - Update `CHANGELOG.md`, bump version, create tag
 - Publish to GitHub Packages
 - Create GitHub Release with notes and artifacts
 
-Avoid manual `npm version`; let semantic-release manage tags and versions. Tag-triggered `publish.yml` and `release.yml` are disabled, as is `changelog.yml`, to prevent overlap.
+Avoid manual `npm version`; let semantic-release manage tags and versions. Tag-triggered `publish.yml` and `release.yml` plus `changelog.yml` are disabled to prevent overlap.
+
+Branch protection recommendation: require all CI matrix jobs (e.g. "Build and Test (ubuntu-latest / Node 24.x)", "Build and Test (macos-latest / Node 24.x)", "Build and Test (windows-latest / Node 24.x)") to pass before merging to `development`. With the new gating, semantic-release only runs after CI succeeds, reducing risk of publishing broken artifacts.
 ```
 feat(parser): add SGJP tag normalization
 fix(windows): correct path handling in setup script
