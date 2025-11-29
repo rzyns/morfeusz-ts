@@ -83,6 +83,16 @@ jobs:
         with:
           path: artifacts
 
+      - name: Generate last release changelog snippet
+        run: npx conventional-changelog -p angular -r 1 > CHANGELOG_RELEASE.md || echo "(Changelog generation skipped)" > CHANGELOG_RELEASE.md
+
+      - name: Append snippet to combined release notes
+        run: |
+          echo "## Changelog (latest release)" > RELEASE_BODY.md
+          cat CHANGELOG_RELEASE.md >> RELEASE_BODY.md
+          echo "\n---" >> RELEASE_BODY.md
+          echo "Automatically generated. Full history in CHANGELOG.md." >> RELEASE_BODY.md
+
       - name: List downloaded artifacts
         run: ls -R artifacts
 
@@ -90,7 +100,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
+          body_path: RELEASE_BODY.md
           files: |
             artifacts/**/morfeusz2.node
+            CHANGELOG_RELEASE.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
