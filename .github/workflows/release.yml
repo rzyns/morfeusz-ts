@@ -49,7 +49,14 @@ jobs:
 
       - name: Setup dictionaries (Windows)
         run: |
-          if (!(Test-Path -Path 'dictionaries/sgjp-a.dict' -or Test-Path -Path 'dictionaries/sgjp-s.dict')) { npm run setup-dicts }
+          $sgjpPresent = (Test-Path 'dictionaries/sgjp-a.dict') -or (Test-Path 'dictionaries/sgjp-s.dict')
+          $polimorfPresent = (Test-Path 'dictionaries/polimorf-a.dict') -or (Test-Path 'dictionaries/polimorf-s.dict')
+          if (-not $sgjpPresent -or -not $polimorfPresent) {
+            Write-Host 'Dictionaries missing; running setup-dicts'
+            npm run setup-dicts
+          } else {
+            Write-Host 'Dictionaries already present; skipping download.'
+          }
         shell: pwsh
         if: runner.os == 'Windows'
 
