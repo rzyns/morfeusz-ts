@@ -14,6 +14,7 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import * as https from "node:https";
 import * as http from "node:http";
+import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
 
 const DICTS = [
@@ -38,6 +39,13 @@ const dictDir = path.join(__dirname, '..', 'dictionaries');
 if (!fs.existsSync(dictDir)) fs.mkdirSync(dictDir, { recursive: true });
 
 function log(msg: string) { console.log(`[setup-dicts] ${msg}`); }
+
+function sha256(filePath: string): string {
+  const hash = createHash('sha256');
+  const data = fs.readFileSync(filePath);
+  hash.update(data);
+  return hash.digest('hex');
+}
 
 function download(url: string, dest: string) {
   return new Promise<void>((resolve, reject) => {
@@ -75,6 +83,23 @@ function download(url: string, dest: string) {
           if (stats.size === 0) {
             fs.unlinkSync(dest);
             return reject(new Error(`Downloaded file is empty: ${dest}`));
+          }
+          // Optional checksum verification: if env var MORFEUSZ_<NAME>_SHA256 is set
+          const envKey = (() => {
+            if (dest.includes('sgjp')) return 'MORFEUSZ_SGJP_SHA256';
+            if (dest.includes('polimorf')) return 'MORFEUSZ_POLIMORF_SHA256';
+            return undefined;
+          })();
+          if (envKey && process.env[envKey]) {
+            const expected = process.env[envKey]!.trim().toLowerCase();
+            const actual = sha256(dest);
+            if (expected !== actual) {
+              fs.unlinkSync(dest);
+              return reject(new Error(`Checksum mismatch for ${dest}. Expected ${expected} got ${actual}`));
+            }
+            log(`Checksum verified (${envKey}).`);
+          } else if (process.env['MORFEUSZ_VERIFY_CHECKSUMS'] === '1') {
+            log(`Checksum env var not set for ${dest}; skipping verification.`);
           }
           resolve();
         });

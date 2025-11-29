@@ -47,6 +47,43 @@ git push --follow-tags
 ## Dictionaries and Postinstall
 The `postinstall` and `setup-dicts` scripts prepare local usage; CI runs `setup-dicts` explicitly and caches the `dictionaries/` directory.
 
+## Changelog
+Releases append entries to `CHANGELOG.md`. The release workflow generates a latest-release snippet and embeds it in the Release body while attaching the raw snippet file. Full history lives in `CHANGELOG.md`.
+
+Local generation commands:
+```bash
+# Update full changelog in-place (semantic commit history required)
+npm run changelog
+
+# Preview only the upcoming (latest) unreleased section
+npm run changelog:preview
+```
+
+Commit conventions enforced via commitlint (Conventional Commits). Examples:
+### Dictionary Checksum Verification
+You can enforce archive integrity by providing expected SHA-256 checksums:
+```bash
+export MORFEUSZ_VERIFY_CHECKSUMS=1
+export MORFEUSZ_SGJP_SHA256=<expected hash>
+export MORFEUSZ_POLIMORF_SHA256=<expected hash>
+npm run setup-dicts
+```
+If `MORFEUSZ_VERIFY_CHECKSUMS=1` is set but a specific checksum variable is missing, verification for that archive is skipped with a warning.
+
+### Semantic Release (Optional Automation)
+Semantic-release can automate versioning and publishing based on commit history. Workflow `semantic-release.yml` runs on `development` and will:
+- Analyze commits (Conventional Commits) to determine next version
+- Update `CHANGELOG.md`, bump version, create tag
+- Publish to GitHub Packages
+- Create GitHub Release with notes and artifacts
+
+Avoid manual `npm version` when using semantic-release; let the workflow manage tags. If transitioning, disable old tag-triggered publish/release workflows or refrain from pushing manual tags.
+```
+feat(parser): add SGJP tag normalization
+fix(windows): correct path handling in setup script
+chore(ci): cache dictionaries in workflows
+docs(readme): add changelog usage section
+```
 
 TypeScript bindings for Morfeusz 2 - Polish morphological analyzer
 
