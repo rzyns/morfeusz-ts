@@ -13,7 +13,8 @@
     "lint": "eslint",
     "prepublishOnly": "npm run build",
     "test": "npm run build:native && vitest run",
-    "setup-dicts": "node --import jiti/register scripts/setup.ts"
+    "setup-dicts": "scripts/setup.ts",
+    "postinstall": "scripts/postinstall.ts"
   },
   "keywords": [
     "morfeusz",

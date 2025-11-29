@@ -35,10 +35,10 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const dictDir = path.join(__dirname, '..', 'dictionaries');
 if (!fs.existsSync(dictDir)) fs.mkdirSync(dictDir, { recursive: true });
 
-function log(msg) { console.log(`[setup-dicts] ${msg}`); }
+function log(msg: string) { console.log(`[setup-dicts] ${msg}`); }
 
-function download(url, dest) {
-  return new Promise((resolve, reject) => {
+function download(url: string, dest: string) {
+  return new Promise<void>((resolve, reject) => {
     if (fs.existsSync(dest)) {
       const stats = fs.statSync(dest);
       if (stats.size > 0) {
@@ -53,7 +53,8 @@ function download(url, dest) {
     const file = fs.createWriteStream(dest);
     const client = url.startsWith('https://') ? https : http;
     client.get(url, res => {
-      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+      const statusCode = res.statusCode ?? 0;
+      if (statusCode >= 300 && statusCode < 400 && res.headers.location) {
         // Redirect
         file.close();
         fs.unlinkSync(dest);
@@ -77,14 +78,14 @@ function download(url, dest) {
         });
       });
     }).on('error', err => {
-      try { file.close(); } catch (_) {}
-      try { fs.unlinkSync(dest); } catch (_) {}
+      try { file.close(); } catch { /* */ }
+      try { fs.unlinkSync(dest); } catch { /* */ }
       reject(err);
     });
   });
 }
 
-function extract(archive, outDir) {
+function extract(archive: string, outDir: string) {
   // Support .tgz, .tar.gz, .zip
   if (/\.(tar\.gz|tgz)$/.test(archive)) {
     log(`Extracting ${archive} to ${outDir} ...`);
@@ -116,7 +117,7 @@ function extract(archive, outDir) {
       }
       log(`${dict.name} dictionary ready (found: ${present.join(', ')}).`);
     } catch (e) {
-      log(`Failed to set up ${dict.name}: ${e.message}`);
+      log(`Failed to set up ${dict.name}: ${(e as Error).message}`);
       log(`You may need to download and extract ${dict.url} manually into ${dictDir}`);
       process.exit(1);
     }

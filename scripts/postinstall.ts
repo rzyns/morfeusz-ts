@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S node --experimental-transform-types
 /**
  * Postinstall dictionary availability helper for morfeusz-ts.
  *
@@ -23,7 +23,7 @@ import * as path from "node:path";
 import * as https from "node:https";
 import { spawnSync } from "node:child_process";
 
-function log(msg) {
+function log(msg: string) {
   console.log(`[morfeusz-ts dict setup] ${msg}`);
 }
 
@@ -32,11 +32,12 @@ if (process.env.MORFEUSZ_SKIP_DICT_DOWNLOAD) {
   process.exit(0);
 }
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 // Determine dictionary target directory
 const dictDir = process.env.MORFEUSZ_DICT_DIR || path.join(__dirname, '..', 'dictionaries');
 
-function ensureDir(p) {
-  try { fs.mkdirSync(p, { recursive: true }); } catch (_) {}
+function ensureDir(p: string) {
+  try { fs.mkdirSync(p, { recursive: true }); } catch { /**/ }
 }
 
 ensureDir(dictDir);
@@ -48,7 +49,7 @@ try {
     log(`Dictionary directory not empty (${existing.length} items); leaving as-is.`);
     process.exit(0);
   }
-} catch (e) {
+} catch {
   // Will try to proceed; directory creation attempted above.
 }
 
@@ -83,7 +84,7 @@ if (!url) {
 const archiveName = process.env.MORFEUSZ_SGJP_ARCHIVE_NAME || 'sgjp-dict.tar.gz';
 const archivePath = path.join(dictDir, archiveName);
 
-function download(url, dest, cb) {
+function download(url: string, dest: string, cb: (err?: unknown | null) => void) {
   log(`Starting download: ${url}`);
   const file = fs.createWriteStream(dest);
   https.get(url, res => {
@@ -101,8 +102,8 @@ function download(url, dest, cb) {
     res.pipe(file);
     file.on('finish', () => file.close(() => cb(null)));
   }).on('error', err => {
-    try { file.close(); } catch (_) {}
-    try { fs.unlinkSync(dest); } catch (_) {}
+    try { file.close(); } catch { /* */ }
+    try { fs.unlinkSync(dest); } catch { /* */ }
     cb(err);
   });
 }
@@ -110,7 +111,7 @@ function download(url, dest, cb) {
 // Perform download
 download(url, archivePath, err => {
   if (err) {
-    log(`Download failed: ${err.message}`);
+    log(`Download failed: ${(err as Error).message}`);
     log('Installation will continue; please supply dictionaries manually.');
     return;
   }
