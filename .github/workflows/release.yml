@@ -8,17 +8,82 @@ on:
 
 permissions:
   contents: write
+  packages: read
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
+  build:
+    name: Build addon (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+
+      - name: Cache dictionaries
+        uses: actions/cache@v4
+        with:
+          path: dictionaries
+          key: dicts-${{ runner.os }}-${{ hashFiles('scripts/setup.ts') }}
+          restore-keys: |
+            dicts-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup dictionaries (if missing)
+        run: |
+          if [ ! -f dictionaries/sgjp-a.dict ] && [ ! -f dictionaries/sgjp-s.dict ]; then
+            npm run setup-dicts || echo "Dictionary setup failed; continuing to allow manual investigation.";
+          fi
+        shell: bash
+        if: runner.os != 'Windows'
+
+      - name: Setup dictionaries (Windows)
+        run: |
+          if (!(Test-Path -Path 'dictionaries/sgjp-a.dict' -or Test-Path -Path 'dictionaries/sgjp-s.dict')) { npm run setup-dicts }
+        shell: pwsh
+        if: runner.os == 'Windows'
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+
+      - name: Upload addon artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: morfeusz2-${{ runner.os }}
+          path: build/Release/morfeusz2.node
+          if-no-files-found: error
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: List downloaded artifacts
+        run: ls -R artifacts
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
+          files: |
+            artifacts/**/morfeusz2.node
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

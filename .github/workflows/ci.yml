@@ -59,6 +59,14 @@ jobs:
       - name: Setup dictionaries
         run: npm run setup-dicts
 
+      - name: Cache dictionaries
+        uses: actions/cache@v4
+        with:
+          path: dictionaries
+          key: dicts-${{ runner.os }}-${{ hashFiles('scripts/setup.ts') }}
+          restore-keys: |
+            dicts-${{ runner.os }}-
+
       - name: Build native addon
         run: npm run build:native
 

@@ -34,8 +34,22 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Cache dictionaries
+        uses: actions/cache@v4
+        with:
+          path: dictionaries
+          key: dicts-${{ runner.os }}-${{ hashFiles('scripts/setup.ts') }}
+          restore-keys: |
+            dicts-${{ runner.os }}-
+
+      - name: Setup dictionaries
+        run: npm run setup-dicts
+
       - name: Build
         run: npm run build
+
+      - name: Test before publish
+        run: npm test
 
       - name: Verify package version matches tag
         run: |
