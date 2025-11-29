@@ -70,14 +70,14 @@ npm run setup-dicts
 ```
 If `MORFEUSZ_VERIFY_CHECKSUMS=1` is set but a specific checksum variable is missing, verification for that archive is skipped with a warning.
 
-### Semantic Release (Optional Automation)
-Semantic-release can automate versioning and publishing based on commit history. Workflow `semantic-release.yml` runs on `development` and will:
+### Semantic Release (Primary Automation)
+This repository uses semantic-release as the sole release/publish mechanism. Workflow `semantic-release.yml` runs on `development` and will:
 - Analyze commits (Conventional Commits) to determine next version
 - Update `CHANGELOG.md`, bump version, create tag
 - Publish to GitHub Packages
 - Create GitHub Release with notes and artifacts
 
-Avoid manual `npm version` when using semantic-release; let the workflow manage tags. If transitioning, disable old tag-triggered publish/release workflows or refrain from pushing manual tags.
+Avoid manual `npm version`; let semantic-release manage tags and versions. Tag-triggered `publish.yml` and `release.yml` are disabled, as is `changelog.yml`, to prevent overlap.
 ```
 feat(parser): add SGJP tag normalization
 fix(windows): correct path handling in setup script

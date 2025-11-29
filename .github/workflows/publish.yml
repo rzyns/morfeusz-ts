@@ -1,9 +1,7 @@
-name: Publish to GitHub Packages
+name: Publish to GitHub Packages (Disabled)
 
 on:
-  push:
-    tags:
-      - 'v*'
+  # Disabled under Path A (semantic-release owns publishing). Keep manual dispatch only.
   workflow_dispatch:
 
 permissions:
@@ -12,6 +10,7 @@ permissions:
 
 jobs:
   publish:
+    if: false # fully disabled; semantic-release publishes via npm plugin
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

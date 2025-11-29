@@ -1,9 +1,7 @@
-name: Create Release
+name: Create Release (Disabled)
 
 on:
-  push:
-    tags:
-      - 'v*'
+  # Disabled under Path A (semantic-release owns releases). Keep manual dispatch only.
   workflow_dispatch:
 
 permissions:
@@ -12,6 +10,7 @@ permissions:
 
 jobs:
   build:
+    if: false # fully disabled; semantic-release handles builds/artifacts/releases
     name: Build addon (${{ matrix.os }})
     strategy:
       fail-fast: false
@@ -74,6 +73,7 @@ jobs:
           if-no-files-found: error
 
   release:
+    if: false # fully disabled; semantic-release creates GitHub Releases
     name: Create Release
     needs: build
     runs-on: ubuntu-latest
