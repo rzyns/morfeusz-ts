@@ -1,4 +1,37 @@
 # morfeusz-ts
+\n+![CI](https://github.com/rzyns/morfeusz-ts/actions/workflows/ci.yml/badge.svg)
+![Publish](https://github.com/rzyns/morfeusz-ts/actions/workflows/publish.yml/badge.svg)
+\n+## Install (GitHub Packages)
+This package is published to GitHub Packages under the scope `@rzyns`.
+\n+1) Authenticate npm to GitHub Packages (one-time per environment):
+\n+Create or update your `~/.npmrc` with:
+\n+```
+@rzyns:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+```
+\n+For local installs, replace `${GITHUB_TOKEN}` with a Classic or Fine-grained token that has `read:packages` permission.
+\n+2) Install:
+\n+```bash
+npm install @rzyns/morfeusz-ts
+```
+\n+## CI
+The repository uses GitHub Actions to build and test on Ubuntu, macOS, and Windows with Node 24.x. CI runs on pushes and pull requests to `development`. Artifacts include the built native addon `build/Release/morfeusz2.node` for debugging.
+\n+## Publishing
+Publishing is automated on a version tag push matching `v*` (e.g., `v0.1.1`). The workflow verifies `package.json` version equals the tag and publishes to GitHub Packages.
+\n+Release flow:
+\n+```bash
+# bump package.json version and create tag
+npm version patch
+
+# push code and tags
+git push --follow-tags
+```
+\n+## Requirements
+- Node.js >= 24 (per `engines`)
+- Native addon builds with `node-gyp`. Real analysis requires `libmorfeusz2` at build/run time; see `docs/STUB_IMPLEMENTATION.md` and `docs/README.md` notes.
+\n+## Dictionaries and Postinstall
+This repo includes dictionaries under `dictionaries/`. The `postinstall` and `setup-dicts` scripts prepare local usage; CI runs `npm ci` and builds before tests.
+
 
 TypeScript bindings for Morfeusz 2 - Polish morphological analyzer
 

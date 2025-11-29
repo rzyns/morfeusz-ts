@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [ development ]
+  pull_request:
+    branches: [ development ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build and Test (${{ matrix.os }} / Node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        node: [ '24.x' ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+
+      - name: Cache node-gyp and build artifacts (Linux/macOS)
+        if: runner.os != 'Windows'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/.cache/node-gyp
+            build
+          key: ${{ runner.os }}-node-${{ matrix.node }}-gyp-${{ hashFiles('**/binding.gyp') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node }}-gyp-
+
+      - name: Cache node-gyp on Windows
+        if: runner.os == 'Windows'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~\AppData\Roaming\npm-cache
+            ~\AppData\Local\node-gyp\Cache
+            build
+          key: ${{ runner.os }}-node-${{ matrix.node }}-gyp-${{ hashFiles('**/binding.gyp') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node }}-gyp-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup dictionaries
+        run: npm run setup-dicts
+
+      - name: Build native addon
+        run: npm run build:native
+
+      - name: Build TypeScript
+        run: npm run build:ts
+
+      - name: Run tests
+        run: npm test
+
+      - name: Upload addon artifact (debug)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: morfeusz2-${{ runner.os }}
+          path: build/Release/morfeusz2.node
+          if-no-files-found: ignore

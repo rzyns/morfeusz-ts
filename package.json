@@ -1,5 +1,5 @@
 {
-  "name": "morfeusz-ts",
+  "name": "@rzyns/morfeusz-ts",
   "version": "0.1.0",
   "description": "TypeScript bindings for Morfeusz 2 - Polish morphological analyzer",
   "type": "module",
@@ -28,6 +28,9 @@
   ],
   "author": "morfeusz-ts contributors",
   "license": "BSD-2-Clause",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "dependencies": {
     "bindings": "^1.5.0",
     "node-addon-api": "^8.0.0"
