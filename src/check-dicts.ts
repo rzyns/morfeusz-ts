@@ -1,9 +1,11 @@
 // Checks for required dictionary files. Used by src/index.ts to short-circuit createInstance().
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 // Derive dirname in ESM context
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+// Use fileURLToPath to normalize Windows paths from file URLs
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const dictDir: string = path.join(__dirname, '..', 'dictionaries');
 // Binary dictionary files produced by official archives (.tgz)

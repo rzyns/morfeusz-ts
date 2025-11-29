@@ -11,6 +11,7 @@
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 import * as https from "node:https";
 import * as http from "node:http";
 import { spawnSync } from "node:child_process";
@@ -31,7 +32,8 @@ const DICTS = [
   }
 ];
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+// Use fileURLToPath to get a proper filesystem path on Windows (avoids duplicated drive letters like D:\D:\...)
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const dictDir = path.join(__dirname, '..', 'dictionaries');
 if (!fs.existsSync(dictDir)) fs.mkdirSync(dictDir, { recursive: true });
 
