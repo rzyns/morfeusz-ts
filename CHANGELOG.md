@@ -1,3 +1,11 @@
+## [0.2.1](https://github.com/rzyns/morfeusz-ts/compare/v0.2.0...v0.2.1) (2025-11-30)
+
+
+### Bug Fixes
+
+* **ci:** remove --no-fund and --no-audit ([d399656](https://github.com/rzyns/morfeusz-ts/commit/d399656e924b1026e91bb8754f9b688f510c9aac))
+* **ci:** replace 'pnpm ci' with 'pnpm install --frozen-lockfile' ([746d9d7](https://github.com/rzyns/morfeusz-ts/commit/746d9d7259d404474c83de8ff5f961d5ffa2ae1b))
+
 ## [0.2.0](https://github.com/rzyns/morfeusz-ts/compare/v0.1.1...v0.2.0) (2025-11-30)
 
 
