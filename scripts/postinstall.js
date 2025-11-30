@@ -11,7 +11,20 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 function log(msg) {
-  console.log(`[morfeusz-ts dict setup] ${msg}`);
+  console.log(`[morfeusz-ts setup] ${msg}`);
+}
+
+// Always build libmorfeusz2 from source first; hard-fail if it fails
+try {
+  log('Building libmorfeusz2 from source...');
+  const res = spawnSync(process.execPath, [path.join(__dirname, 'build-lib.js')], { stdio: 'inherit' });
+  if (res.status !== 0) {
+    throw new Error('libmorfeusz2 build failed');
+  }
+} catch (e) {
+  log(`ERROR: ${e.message}`);
+  log('Installation aborted: libmorfeusz2 must be available.');
+  process.exit(1);
 }
 
 if (process.env.MORFEUSZ_SKIP_DICT_DOWNLOAD) {
@@ -49,7 +62,7 @@ function hasRealLib() {
 if (hasRealLib()) {
   log('Detected libmorfeusz2; expecting system dictionaries accessible via library defaults.');
 } else {
-  log('Did NOT detect libmorfeusz2; may be using stub build or non-standard install path.');
+  log('Did NOT detect libmorfeusz2; library may be in local vendor path.');
 }
 
 const url = process.env.MORFEUSZ_SGJP_URL;

@@ -609,6 +609,23 @@ Napi::Value CreateInstanceWithDict(const Napi::CallbackInfo& info) {
     }
 }
 
+// Add dictionary search path (pushes to global list)
+Napi::Value AddDictionarySearchPath(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    if (info.Length() < 1 || !info[0].IsString()) {
+        Napi::TypeError::New(env, "Path string required").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    std::string path = info[0].As<Napi::String>().Utf8Value();
+    try {
+        Morfeusz::dictionarySearchPaths.push_back(path);
+        return env.Undefined();
+    } catch (const std::exception& e) {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return env.Null();
+    }
+}
+
 // Module initialization
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     // Initialize wrapper classes
@@ -621,6 +638,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set("getCopyright", Napi::Function::New(env, GetCopyright));
     exports.Set("createInstance", Napi::Function::New(env, CreateInstance));
     exports.Set("createInstanceWithDict", Napi::Function::New(env, CreateInstanceWithDict));
+    exports.Set("addDictionarySearchPath", Napi::Function::New(env, AddDictionarySearchPath));
     
     return exports;
 }

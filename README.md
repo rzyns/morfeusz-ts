@@ -93,51 +93,88 @@ This repository uses semantic-release as the sole release/publish mechanism. Wor
 Avoid manual `pnpm version`; let semantic-release manage tags and versions. Tag-triggered legacy workflows are disabled to prevent overlap.
 
 Branch protection recommendation: require all CI matrix jobs (e.g. "Build and Test (ubuntu-latest / Node 24.x)", "Build and Test (macos-latest / Node 24.x)", "Build and Test (windows-latest / Node 24.x)") to pass before merging to `development`. With the new gating, semantic-release only runs after CI succeeds, reducing risk of publishing broken artifacts.
+
+## Real Morfeusz2 Library and Dictionary Handling
+
+**This package now always builds and links against the real Morfeusz2 C++ library.** The stub header and fallback logic have been removed. If the library is missing or not built from source, installation will fail.
+
+### Dictionary Search Path Registration
+- On module load, the package automatically registers the `dictionaries/` folder as a search path for Morfeusz2 dictionaries.
+- You can add additional search paths at runtime using:
+
+```typescript
+import MorfeuszFactory from 'morfeusz-ts';
+MorfeuszFactory.addDictionarySearchPath('/custom/path/to/dicts');
 ```
-feat(parser): add SGJP tag normalization
-fix(windows): correct path handling in setup script
-chore(ci): cache dictionaries in workflows
-docs(readme): add changelog usage section
-```
 
-TypeScript bindings for Morfeusz 2 - Polish morphological analyzer
+### Default Dictionary Fallback
+- If the native library does not report an embedded default dictionary, the package will infer a default from the bundled `.dict` files in `dictionaries/`.
+- This ensures that `createInstance()` works out-of-the-box if at least one dictionary is present.
 
-## Overview
+### Hard Failure Policy
+- If the real Morfeusz2 library or required dictionaries are missing, the package will throw an error at install or instance creation time. There is no stub fallback.
 
-This package provides high-fidelity TypeScript bindings for [Morfeusz 2](http://morfeusz.sgjp.pl/), a morphological analyzer for Polish. The types are carefully crafted to match the actual behavior of the library, using type-level programming to ensure correctness beyond what the C++ types provide.
+## Requirements
+- Node.js >= 24 (per `engines`)
+- Native addon builds with `node-gyp`. Real analysis requires `libmorfeusz2` at build/run time; see `docs/STUB_IMPLEMENTATION.md` and `docs/README.md` notes.
+- Internet access during CI dictionary setup (archives cached between runs)
 
-## Features
+## Dictionaries and Postinstall
+The `postinstall` and `setup-dicts` scripts prepare local usage; CI runs `setup-dicts` explicitly and caches the `dictionaries/` directory.
 
-- **Type-safe API**: Rich TypeScript types with branded types for IDs
-- **Complete API coverage**: All Morfeusz 2 features exposed
-- **High fidelity**: Types accurately reflect library behavior
-- **Native performance**: Direct bindings to libmorfeusz2
+## Changelog
+Releases append entries to `CHANGELOG.md`. The release workflow generates a latest-release snippet and embeds it in the Release body while attaching the raw snippet file. Full history lives in `CHANGELOG.md`.
 
-## Prerequisites
-
-**Note:** This package currently includes a stub implementation for development purposes. For production use with actual morphological analysis, you'll need to install the real libmorfeusz2 library and update the build configuration. See [STUB_IMPLEMENTATION.md](STUB_IMPLEMENTATION.md) for details.
-
-Before installing for production use, you need to have libmorfeusz2 installed on your system:
-
-### Ubuntu/Debian
+Local generation commands:
 ```bash
-sudo apt-get install libmorfeusz2-dev
+# Update full changelog in-place (semantic commit history required)
+pnpm run changelog
+
+# Preview only the upcoming (latest) unreleased section
+pnpm run changelog:preview
 ```
 
-### macOS (using Homebrew)
+Commit conventions enforced via commitlint (Conventional Commits). Examples:
+### Dictionary Checksum Verification
+You can enforce archive integrity by providing expected SHA-256 checksums:
 ```bash
-# You may need to download and install from source
-# See http://morfeusz.sgjp.pl/download/en
+export MORFEUSZ_VERIFY_CHECKSUMS=1
+export MORFEUSZ_SGJP_SHA256=<expected hash>
+export MORFEUSZ_POLIMORF_SHA256=<expected hash>
+pnpm run setup-dicts
+```
+If `MORFEUSZ_VERIFY_CHECKSUMS=1` is set but a specific checksum variable is missing, verification for that archive is skipped with a warning.
+
+### Semantic Release (Primary Automation)
+This repository uses semantic-release as the sole release/publish mechanism. Workflow `semantic-release.yml` now runs only after the `CI` workflow finishes successfully on the `development` branch (via a `workflow_run` trigger) and can also be invoked manually (`workflow_dispatch`). It will:
+- Analyze commits (Conventional Commits) to determine next version
+- Update `CHANGELOG.md`, bump version, create tag
+- Publish to GitHub Packages
+- Create GitHub Release with notes and artifacts
+
+Avoid manual `pnpm version`; let semantic-release manage tags and versions. Tag-triggered legacy workflows are disabled to prevent overlap.
+
+Branch protection recommendation: require all CI matrix jobs (e.g. "Build and Test (ubuntu-latest / Node 24.x)", "Build and Test (macos-latest / Node 24.x)", "Build and Test (windows-latest / Node 24.x)") to pass before merging to `development`. With the new gating, semantic-release only runs after CI succeeds, reducing risk of publishing broken artifacts.
+
+## Real Morfeusz2 Library and Dictionary Handling
+
+**This package now always builds and links against the real Morfeusz2 C++ library.** The stub header and fallback logic have been removed. If the library is missing or not built from source, installation will fail.
+
+### Dictionary Search Path Registration
+- On module load, the package automatically registers the `dictionaries/` folder as a search path for Morfeusz2 dictionaries.
+- You can add additional search paths at runtime using:
+
+```typescript
+import MorfeuszFactory from 'morfeusz-ts';
+MorfeuszFactory.addDictionarySearchPath('/custom/path/to/dicts');
 ```
 
-### From source
-Download from [http://morfeusz.sgjp.pl/download/en](http://morfeusz.sgjp.pl/download/en)
+### Default Dictionary Fallback
+- If the native library does not report an embedded default dictionary, the package will infer a default from the bundled `.dict` files in `dictionaries/`.
+- This ensures that `createInstance()` works out-of-the-box if at least one dictionary is present.
 
-## Installation
-
-```bash
-pnpm install morfeusz-ts
-```
+### Hard Failure Policy
+- If the real Morfeusz2 library or required dictionaries are missing, the package will throw an error at install or instance creation time. There is no stub fallback.
 
 ## Usage
 
@@ -319,6 +356,17 @@ If you are still seeing a stub default (e.g. `stub-dict`) you are linking agains
 - Avoid committing large dictionary data to VCS; keep in artifacts/cache.
 
 See `STUB_IMPLEMENTATION.md` for details on substituting real library behavior.
+
+### Dictionary Search Path API
+
+You can add custom dictionary search paths at runtime:
+
+```typescript
+import MorfeuszFactory from 'morfeusz-ts';
+MorfeuszFactory.addDictionarySearchPath('/my/extra/dicts');
+```
+
+This is useful if you want to use dictionaries outside the default `dictionaries/` folder or system locations.
 
 ## API Documentation
 

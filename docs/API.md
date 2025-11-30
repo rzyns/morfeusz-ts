@@ -299,10 +299,13 @@ interface MorfeuszStatic {
   getVersion(): string;
   getDefaultDictName(): string;
   getCopyright(): string;
-  
+
   // Instance creation
   createInstance(usage?: MorfeuszUsage): Morfeusz;
   createInstance(dictName: string, usage?: MorfeuszUsage): Morfeusz;
+
+  // Dictionary search path
+  addDictionarySearchPath(path: string): void;
 }
 ```
 
@@ -323,6 +326,28 @@ const morfeusz2 = MorfeuszFactory.createInstance(MorfeuszUsage.ANALYSE_ONLY);
 // Create with specific dictionary
 const morfeusz3 = MorfeuszFactory.createInstance('morfeusz-sgjp');
 ```
+
+## Dictionary Search Path API
+
+### addDictionarySearchPath(path: string): void
+
+Adds a directory to the Morfeusz2 dictionary search path at runtime. This is useful for loading dictionaries from custom locations.
+
+**Example:**
+```typescript
+import MorfeuszFactory from 'morfeusz-ts';
+MorfeuszFactory.addDictionarySearchPath('/my/extra/dicts');
+```
+
+The package automatically registers the `dictionaries/` folder on load if it exists.
+
+## Default Dictionary Fallback
+
+If the native library does not report an embedded default dictionary, the package will infer a default from the available `.dict` files in the registered search paths. This ensures that `createInstance()` works if at least one dictionary is present.
+
+## Real Library Requirement
+
+The package always builds and links against the real Morfeusz2 C++ library. If the library or required dictionaries are missing, instance creation will throw an error. There is no stub fallback.
 
 ## Working with Results
 

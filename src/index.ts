@@ -43,6 +43,7 @@ interface NativeMorfeusz {
   getCopyright(): string;
   createInstance(usage?: number): NativeMorfeuszInstance;
   createInstanceWithDict(dictName: string, usage?: number): NativeMorfeuszInstance;
+  addDictionarySearchPath(path: string): void;
 }
 
 interface NativeMorfeuszInstance {
@@ -81,6 +82,15 @@ interface NativeIdResolver {
 
 // Load the native module
 const native: NativeMorfeusz = bindings('morfeusz2');
+
+// Register dictionaries directory as a search path (once).
+try {
+  if (fs.existsSync(dictDir)) {
+    native.addDictionarySearchPath(dictDir);
+  }
+} catch (e) {
+  // Non-fatal: path registration failure will surface later when creating instances.
+}
 
 /**
  * Wrap native IdResolver with type-safe interface
@@ -235,7 +245,20 @@ function ensureDictionariesOrThrow() {
     },
 
     getDefaultDictName(): string {
-      return native.getDefaultDictName();
+      const name = native.getDefaultDictName();
+      if (name && name.length > 0) return name;
+      // Fallback: infer from available local dictionaries
+      try {
+        if (fs.existsSync(dictDir)) {
+          const entries = fs.readdirSync(dictDir);
+          const candidates = entries
+            .filter(f => f.endsWith('.dict'))
+            .map(f => f.replace(/\.(dict)$/,'').replace(/-[as]$/,''))
+            .filter((v, i, a) => a.indexOf(v) === i);
+          if (candidates.length > 0) return candidates[0];
+        }
+      } catch {}
+      return name;
     },
 
     getCopyright(): string {
@@ -252,7 +275,13 @@ function ensureDictionariesOrThrow() {
         nativeInstance = native.createInstanceWithDict(usageOrDictName, usage);
       } else {
         const actualUsage = usageOrDictName ?? MorfeuszUsage.BOTH_ANALYSE_AND_GENERATE;
-        nativeInstance = native.createInstance(actualUsage);
+        // Prefer an explicit dictionary if the library has no embedded default
+        const inferred = MorfeuszFactory.getDefaultDictName();
+        if (inferred && inferred.length > 0) {
+          nativeInstance = native.createInstanceWithDict(inferred, actualUsage);
+        } else {
+          nativeInstance = native.createInstance(actualUsage);
+        }
       }
       return new MorfeuszWrapper(nativeInstance);
     }
