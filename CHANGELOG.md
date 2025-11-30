@@ -1,3 +1,17 @@
+## [0.2.0](https://github.com/rzyns/morfeusz-ts/compare/v0.1.1...v0.2.0) (2025-11-30)
+
+
+### Features
+
+* **ci:** conventional commits, husky, semantic-release ([ea39f19](https://github.com/rzyns/morfeusz-ts/commit/ea39f19f2d5c7c0e8fb5da6b201ca2c94e833566))
+
+
+### Bug Fixes
+
+* **ci:** fix github actions ([140ca01](https://github.com/rzyns/morfeusz-ts/commit/140ca0118d91a9da408912c8c0197cca06317aed))
+* **ci:** run semantic-release after ci ([fadb8ea](https://github.com/rzyns/morfeusz-ts/commit/fadb8ea651005546dad3baeaa7546e10528ed972))
+* **ci:** stuff ([ec0da62](https://github.com/rzyns/morfeusz-ts/commit/ec0da626b5f77118b4a34e23d80bac25fd7ada1c))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
