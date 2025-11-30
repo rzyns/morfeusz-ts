@@ -1,3 +1,10 @@
+## [0.2.2](https://github.com/rzyns/morfeusz-ts/compare/v0.2.1...v0.2.2) (2025-11-30)
+
+
+### Bug Fixes
+
+* **install:** convert postinstall/setup scripts to JS ([0df0fcb](https://github.com/rzyns/morfeusz-ts/commit/0df0fcb6cf2887dfd3a7aa8b7e8ff6767eba2906))
+
 ## [0.2.1](https://github.com/rzyns/morfeusz-ts/compare/v0.2.0...v0.2.1) (2025-11-30)
 
 
