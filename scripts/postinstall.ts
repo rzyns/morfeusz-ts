@@ -1,4 +1,4 @@
-#!/usr/bin/env -S node --experimental-transform-types
+#!/usr/bin/env node
 /**
  * Postinstall dictionary availability helper for morfeusz-ts.
  *
@@ -17,7 +17,7 @@
  *       By default we DO NOT auto-download without an explicit URL because of
  *       licensing / reproducibility concerns. Provide MORFEUSZ_SGJP_URL to enable.
  */
-
+import "jiti/register";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as https from "node:https";

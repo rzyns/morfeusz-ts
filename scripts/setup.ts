@@ -1,4 +1,4 @@
-#!/usr/bin/env -S node --experimental-transform-types
+#!/usr/bin/env node
 /**
  * Setup script for morfeusz-ts: downloads SGJP and Polimorf dictionaries from official sources.
  *
@@ -9,6 +9,7 @@
  *
  * This script does NOT host or redistribute dictionary files.
  */
+import "jiti/register";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";

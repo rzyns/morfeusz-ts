@@ -13,8 +13,8 @@
     "lint": "eslint",
     "prepublishOnly": "npm run build",
     "test": "npm run build:native && vitest run",
-    "setup-dicts": "tsx scripts/setup.ts",
-    "postinstall": "tsx scripts/postinstall.ts",
+    "setup-dicts": "node scripts/setup.ts",
+    "postinstall": "node scripts/postinstall.ts",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "changelog:preview": "conventional-changelog -p angular -r 1",
     "prepare": "husky"
@@ -57,7 +57,6 @@
     "jiti": "^2.6.1",
     "node-gyp": "^10.0.0",
     "semantic-release": "^23.0.0",
-    "tsx": "^4.20.6",
     "typescript": "^5.3.0",
     "typescript-eslint": "^8.48.0",
     "vitest": "^4.0.14"
