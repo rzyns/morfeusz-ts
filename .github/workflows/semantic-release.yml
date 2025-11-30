@@ -30,8 +30,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24.x'
-          cache: 'npm'
+          cache: 'pnpm'
           registry-url: 'https://npm.pkg.github.com'
+
+      - name: Enable corepack
+        run: corepack enable
 
       - name: Cache dictionaries
         uses: actions/cache@v4

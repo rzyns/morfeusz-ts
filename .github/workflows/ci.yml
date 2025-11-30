@@ -27,7 +27,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: Enable corepack
+        run: corepack enable
 
       - name: Cache node-gyp and build artifacts (Linux/macOS)
         if: runner.os != 'Windows'

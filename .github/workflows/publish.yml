@@ -21,7 +21,10 @@ jobs:
         with:
           node-version: '24.x'
           registry-url: 'https://npm.pkg.github.com'
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: Enable corepack
+        run: corepack enable
 
       - name: Configure npm scope
         run: |
@@ -31,7 +34,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm ci --no-fund --no-audit
 
       - name: Cache dictionaries
         uses: actions/cache@v4
@@ -42,13 +45,13 @@ jobs:
             dicts-${{ runner.os }}-
 
       - name: Setup dictionaries
-        run: npm run setup-dicts
+        run: pnpm run setup-dicts
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       - name: Test before publish
-        run: npm test
+        run: pnpm test
 
       - name: Verify package version matches tag
         run: |
@@ -60,6 +63,6 @@ jobs:
           fi
 
       - name: Publish
-        run: npm publish
+        run: pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
