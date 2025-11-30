@@ -51,7 +51,7 @@ jobs:
             dicts-${{ runner.os }}-
 
       - name: Install dependencies
-        run: pnpm ci --no-audit --no-fund
+        run: pnpm install --frozen-lockfile --no-fund --no-audit
 
       - name: Setup dictionaries
         run: pnpm run setup-dicts

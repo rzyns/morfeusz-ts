@@ -63,7 +63,7 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node }}-gyp-
 
       - name: Install dependencies
-        run: pnpm ci
+        run: pnpm install --frozen-lockfile --no-fund --no-audit
 
       - name: Setup dictionaries
         run: pnpm run setup-dicts

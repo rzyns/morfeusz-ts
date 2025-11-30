@@ -40,7 +40,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
-        run: pnpm ci --no-fund --no-audit
+        run: pnpm install --frozen-lockfile --no-fund --no-audit
 
       - name: Cache dictionaries
         uses: actions/cache@v4
