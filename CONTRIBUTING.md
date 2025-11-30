@@ -6,7 +6,7 @@ Thank you for your interest in contributing to morfeusz-ts! This document provid
 
 ### Prerequisites
 
-1. Node.js 24+ and npm (matches `engines.node`)
+1. Node.js 24+ and pnpm (matches `engines.node`)
 2. C++ compiler (g++, clang, or MSVC)
 3. Python 3.x (for node-gyp)
 4. libmorfeusz2-dev (for production builds)
@@ -19,13 +19,13 @@ git clone https://github.com/rzyns/morfeusz-ts.git
 cd morfeusz-ts
 
 # Install dependencies
-npm install
+pnpm install
 
 # Build the project
-npm run build
+pnpm run build
 
 # Run tests
-npm test
+pnpm test
 ```
 
 ## Project Structure
@@ -51,28 +51,28 @@ morfeusz-ts/
 
 ```bash
 # Build everything
-npm run build
+pnpm run build
 
 # Build native module only
-npm run build:native
+pnpm run build:native
 
 # Build TypeScript only
-npm run build:ts
+pnpm run build:ts
 
 # Clean build artifacts
-npm run clean
+pnpm run clean
 ```
 
 ### Testing
 
 ```bash
 # Run tests
-npm test
+pnpm test
 
 # Test with actual libmorfeusz2 (requires library installed)
 # Update binding.gyp first to link against -lmorfeusz2
-npm run build:native
-npm test
+pnpm run build:native
+pnpm test
 ```
 
 ### Code Style
@@ -104,10 +104,10 @@ git checkout -b fix/issue-description
 
 ```bash
 # Ensure everything builds
-npm run build
+pnpm run build
 
 # Run tests
-npm test
+pnpm test
 
 # Test with examples
 node examples/basic-usage.js
@@ -367,10 +367,10 @@ Breaking changes: append `!` after type/scope or include `BREAKING CHANGE:` foot
 Releases and package publishing are automated via GitHub Actions (`publish.yml` and `release.yml`). Publishing targets GitHub Packages (GPR) under the scope `@rzyns`.
 
 ### 1. Choose Version
-Follow semantic versioning (MAJOR.MINOR.PATCH). Bump using npm which creates the tag automatically:
+Follow semantic versioning (MAJOR.MINOR.PATCH). Bump using pnpm which creates the tag automatically:
 
 ```bash
-npm version patch   # or minor / major
+pnpm version patch   # or minor / major
 ```
 
 This updates `package.json`, creates a commit and a tag `vX.Y.Z`.
@@ -389,8 +389,8 @@ The `v*` tag triggers:
 `CHANGELOG.md` can be regenerated from conventional commits:
 
 ```bash
-npm run changelog           # full history (in-place)
-npm run changelog:preview   # latest snippet only
+pnpm run changelog           # full history (in-place)
+pnpm run changelog:preview   # latest snippet only
 ```
 The release workflow also injects the latest snippet into the GitHub Release body.
 
@@ -402,20 +402,20 @@ The release workflow also injects the latest snippet into the GitHub Release bod
 ### 5. Consumption
 Users install via:
 ```bash
-npm install @rzyns/morfeusz-ts
+pnpm install @rzyns/morfeusz-ts
 ```
 Ensure their `.npmrc` contains the GitHub Packages auth lines documented in `README.md`.
 
 ### Notes
-- No manual `npm publish` needed; workflows handle publishing.
+- No manual `pnpm publish` needed; workflows handle publishing.
 - If a publish fails (e.g., tests fail), fix the issue, bump to the next patch version, and repeat.
 - Avoid force-pushing rewritten tags; instead increment the patch number.
-- To test locally before tagging: run `npm ci && npm run setup-dicts && npm test`.
-- If using semantic-release (optional automation), do NOT run `npm version` or create tags manually; semantic-release derives version from commit messages.
+- To test locally before tagging: run `pnpm ci && pnpm run setup-dicts && pnpm test`.
+- If using semantic-release (optional automation), do NOT run `pnpm version` or create tags manually; semantic-release derives version from commit messages.
 
 ### Dry Run (Optional)
 ### Dictionary Checksums (Optional)
-For stricter integrity you can export `MORFEUSZ_VERIFY_CHECKSUMS=1` and provide expected SHA-256 values in `MORFEUSZ_SGJP_SHA256` / `MORFEUSZ_POLIMORF_SHA256` before running `npm run setup-dicts`.
+For stricter integrity you can export `MORFEUSZ_VERIFY_CHECKSUMS=1` and provide expected SHA-256 values in `MORFEUSZ_SGJP_SHA256` / `MORFEUSZ_POLIMORF_SHA256` before running `pnpm run setup-dicts`.
 
 ### Semantic Release
 Semantic-release workflow (`semantic-release.yml`) automates:

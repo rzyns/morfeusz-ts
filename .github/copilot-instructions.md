@@ -15,11 +15,11 @@ This repo provides TypeScript bindings for the Morfeusz 2 Polish morphological a
 - **Node version**: `engines.node >= 18`. Use a modern Node.
 - **Dependencies**: Requires `libmorfeusz2` available at build/run time for real analysis. The repo may include a stub; see `STUB_IMPLEMENTATION.md` and `README.md` for production notes.
 - **Build commands** (run from repo root):
-  - `npm run build:native` → builds the C++ addon via `node-gyp rebuild`.
-  - `npm run build:ts` → compiles TS to `dist/` using `tsc`.
-  - `npm run build` → runs both native and TS builds.
-  - `npm run clean` → removes `build/` and `dist/`.
-- **Run tests**: `npm test` executes `test/test.js` using Node against the built addon. Keep tests minimal and focus on API behavior (DAG results, resolver correctness).
+  - `pnpm run build:native` → builds the C++ addon via `node-gyp rebuild`.
+  - `pnpm run build:ts` → compiles TS to `dist/` using `tsc`.
+  - `pnpm run build` → runs both native and TS builds.
+  - `pnpm run clean` → removes `build/` and `dist/`.
+- **Run tests**: `pnpm test` executes `test/test.js` using Node against the built addon. Keep tests minimal and focus on API behavior (DAG results, resolver correctness).
 - **Debugging tips**:
   - Native addon outputs are JavaScript objects created in `MorphInterpToJS` with resolved `tag`, `name`, `labels` via `IdResolver` — check this when validating results.
   - Most native methods wrap exceptions with `Napi::Error`. Inspect thrown messages when calls fail (e.g., invalid tag/labels).

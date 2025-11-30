@@ -66,8 +66,8 @@ Update `binding.gyp` include order to prioritize system includes:
 ### 4. Rebuild
 
 ```bash
-npm run clean
-npm run build
+pnpm run clean
+pnpm run build
 ```
 
 ## Stub Limitations

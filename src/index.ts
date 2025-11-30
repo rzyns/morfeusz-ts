@@ -223,7 +223,7 @@ function ensureDictionariesOrThrow() {
       throw new Error(
         `Morfeusz dictionaries not found.\n` +
         `Missing: ${missing.join(', ')}\n` +
-        `Please run: npm run setup-dicts\n` +
+        `Please run: pnpm run setup-dicts\n` +
         `See README for details.`
       );
     }

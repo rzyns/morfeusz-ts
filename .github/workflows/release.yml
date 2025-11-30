@@ -36,12 +36,12 @@ jobs:
             dicts-${{ runner.os }}-
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm ci
 
       - name: Setup dictionaries (if missing)
         run: |
           if [ ! -f dictionaries/sgjp-a.dict ] && [ ! -f dictionaries/sgjp-s.dict ]; then
-            npm run setup-dicts || echo "Dictionary setup failed; continuing to allow manual investigation.";
+            pnpm run setup-dicts || echo "Dictionary setup failed; continuing to allow manual investigation.";
           fi
         shell: bash
         if: runner.os != 'Windows'
@@ -52,7 +52,7 @@ jobs:
           $polimorfPresent = (Test-Path 'dictionaries/polimorf-a.dict') -or (Test-Path 'dictionaries/polimorf-s.dict')
           if (-not $sgjpPresent -or -not $polimorfPresent) {
             Write-Host 'Dictionaries missing; running setup-dicts'
-            npm run setup-dicts
+            pnpm run setup-dicts
           } else {
             Write-Host 'Dictionaries already present; skipping download.'
           }
@@ -60,10 +60,10 @@ jobs:
         if: runner.os == 'Windows'
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       - name: Test
-        run: npm test
+        run: pnpm test
 
       - name: Upload addon artifact
         uses: actions/upload-artifact@v4

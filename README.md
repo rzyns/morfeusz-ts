@@ -20,7 +20,7 @@ For local installs, replace `${GITHUB_TOKEN}` with a Classic or Fine-grained tok
 2) Install:
 
 ```bash
-npm install @rzyns/morfeusz-ts
+pnpm add @rzyns/morfeusz-ts
 ```
 
 ## CI
@@ -33,7 +33,7 @@ Release flow:
 
 ```bash
 # bump package.json version and create tag
-npm version patch
+pnpm version patch
 
 # push code and tags
 git push --follow-tags
@@ -53,10 +53,10 @@ Releases append entries to `CHANGELOG.md`. The release workflow generates a late
 Local generation commands:
 ```bash
 # Update full changelog in-place (semantic commit history required)
-npm run changelog
+pnpm run changelog
 
 # Preview only the upcoming (latest) unreleased section
-npm run changelog:preview
+pnpm run changelog:preview
 ```
 
 Commit conventions enforced via commitlint (Conventional Commits). Examples:
@@ -66,7 +66,7 @@ You can enforce archive integrity by providing expected SHA-256 checksums:
 export MORFEUSZ_VERIFY_CHECKSUMS=1
 export MORFEUSZ_SGJP_SHA256=<expected hash>
 export MORFEUSZ_POLIMORF_SHA256=<expected hash>
-npm run setup-dicts
+pnpm run setup-dicts
 ```
 If `MORFEUSZ_VERIFY_CHECKSUMS=1` is set but a specific checksum variable is missing, verification for that archive is skipped with a warning.
 
@@ -77,7 +77,7 @@ This repository uses semantic-release as the sole release/publish mechanism. Wor
 - Publish to GitHub Packages
 - Create GitHub Release with notes and artifacts
 
-Avoid manual `npm version`; let semantic-release manage tags and versions. Tag-triggered `publish.yml` and `release.yml` plus `changelog.yml` are disabled to prevent overlap.
+Avoid manual `pnpm version`; let semantic-release manage tags and versions. Tag-triggered `publish.yml` and `release.yml` plus `changelog.yml` are disabled to prevent overlap.
 
 Branch protection recommendation: require all CI matrix jobs (e.g. "Build and Test (ubuntu-latest / Node 24.x)", "Build and Test (macos-latest / Node 24.x)", "Build and Test (windows-latest / Node 24.x)") to pass before merging to `development`. With the new gating, semantic-release only runs after CI succeeds, reducing risk of publishing broken artifacts.
 ```
@@ -123,7 +123,7 @@ Download from [http://morfeusz.sgjp.pl/download/en](http://morfeusz.sgjp.pl/down
 ## Installation
 
 ```bash
-npm install morfeusz-ts
+pnpm install morfeusz-ts
 ```
 
 ## Usage
@@ -278,7 +278,7 @@ Morfeusz requires dictionary data (e.g. SGJP) accessible to the native library. 
 3. **Automated (opt-in)**: A `postinstall` script checks for an empty dictionary directory and will attempt a download *only if* you provide an explicit URL via an environment variable.
 
 ### Postinstall Behavior
-The script at `scripts/postinstall.js` runs after `npm install`:
+The script at `scripts/postinstall.js` runs after `pnpm install`:
 - Detects presence of `libmorfeusz2` via `ldconfig` (Linux heuristic).
 - Ensures a dictionary directory (default: `dictionaries/` inside the package) exists.
 - Skips auto-download unless `MORFEUSZ_SGJP_URL` is set.

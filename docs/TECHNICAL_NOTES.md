@@ -140,7 +140,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on implementing these impr
 ### Enable Debug Builds
 ```bash
 # Debug build with symbols
-npm run build:native -- --debug
+pnpm run build:native -- --debug
 
 # Use with node --inspect
 node --inspect test/test.js

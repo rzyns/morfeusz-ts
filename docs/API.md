@@ -14,7 +14,7 @@
 ## Installation
 
 ```bash
-npm install morfeusz-ts
+pnpm install morfeusz-ts
 ```
 
 ### System Requirements

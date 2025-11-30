@@ -129,7 +129,7 @@ results.forEach(interp => {
 ### Prerequisites
 1. Install libmorfeusz2-dev
 2. Copy `binding.gyp.production` to `binding.gyp`
-3. Rebuild: `npm run build`
+3. Rebuild: `pnpm run build`
 
 ### Verification
 ```typescript
