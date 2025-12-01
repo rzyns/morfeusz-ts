@@ -19,26 +19,22 @@
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
-import * as https from "node:https";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { download, ensureDir, hasRealLib, log } from "./_lib.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-function log(msg: string) {
-  console.log(`[morfeusz-ts setup] ${msg}`);
-}
-
 // Always build lib from source; hard-fail if missing
 try {
-  log('Building libmorfeusz2 from source...');
+  log("postinstall", 'Building libmorfeusz2 from source...');
   const res = spawnSync(process.execPath, [path.join(__dirname, 'build-lib.js')], { stdio: 'inherit' });
   if (res.status !== 0) {
     throw new Error('libmorfeusz2 build failed');
   }
 } catch (e) {
-  log(`ERROR: ${(e as Error).message}`);
-  log('Installation aborted: libmorfeusz2 must be available.');
+  log("postinstall", `ERROR: ${(e as Error).message}`);
+  log("postinstall", 'Installation aborted: libmorfeusz2 must be available.');
   process.exit(1);
 }
 
@@ -50,87 +46,50 @@ try {
 // Determine dictionary target directory
 const dictDir = process.env.MORFEUSZ_DICT_DIR || path.join(__dirname, '..', 'dictionaries');
 
-function ensureDir(p: string) {
-  try { fs.mkdirSync(p, { recursive: true }); } catch { /**/ }
-}
-
 ensureDir(dictDir);
 
 // Basic heuristic: if directory already contains files, assume dictionaries present.
 try {
   const existing = fs.readdirSync(dictDir).filter(f => !f.startsWith('.'));
   if (existing.length > 0) {
-    log(`Dictionary directory not empty (${existing.length} items); leaving as-is.`);
+    log("postinstall", `Dictionary directory not empty (${existing.length} items); leaving as-is.`);
     process.exit(0);
   }
 } catch {
   // Will try to proceed; directory creation attempted above.
 }
 
-// Detect presence of real libmorfeusz2 (optional informational).
-function hasRealLib() {
-  // Try ldconfig (Linux). Non-fatal if unavailable.
-  const ld = spawnSync('ldconfig', ['-p'], { encoding: 'utf8' });
-  if (ld.status === 0 && /libmorfeusz2\.so/.test(ld.stdout)) return true;
-  // Fallback heuristic: common library paths.
-  const candidates = [
-    '/usr/lib/libmorfeusz2.so',
-    '/usr/local/lib/libmorfeusz2.so'
-  ];
-  return candidates.some(p => fs.existsSync(p));
-}
 
 if (hasRealLib()) {
-  log('Detected libmorfeusz2; expecting system dictionaries accessible via library defaults.');
+  log("postinstall", 'Detected libmorfeusz2; expecting system dictionaries accessible via library defaults.');
 } else {
-  log('Did NOT detect libmorfeusz2 via ldconfig; library may be in local vendor path.');
+  log("postinstall", 'Did NOT detect libmorfeusz2 via ldconfig; library may be in local vendor path.');
 }
 
 // Download logic only proceeds if a URL is explicitly provided.
 const url = process.env.MORFEUSZ_SGJP_URL;
 if (!url) {
-  log('No MORFEUSZ_SGJP_URL provided; skipping automatic dictionary download.');
-  log('Set MORFEUSZ_SGJP_URL to enable downloading during install.');
-  log(`Target dictionary directory: ${dictDir}`);
+  log("postinstall", 'No MORFEUSZ_SGJP_URL provided; skipping automatic dictionary download.');
+  log("postinstall", 'Set MORFEUSZ_SGJP_URL to enable downloading during install.');
+  log("postinstall", `Target dictionary directory: ${dictDir}`);
   process.exit(0);
 }
 
 const archiveName = process.env.MORFEUSZ_SGJP_ARCHIVE_NAME || 'sgjp-dict.tar.gz';
 const archivePath = path.join(dictDir, archiveName);
 
-function download(url: string, dest: string, cb: (err?: unknown | null) => void) {
-  log(`Starting download: ${url}`);
-  const file = fs.createWriteStream(dest);
-  https.get(url, res => {
-    if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-      // Handle redirects
-      file.close();
-      fs.unlinkSync(dest);
-      return download(res.headers.location, dest, cb);
-    }
-    if (res.statusCode !== 200) {
-      file.close();
-      fs.unlinkSync(dest);
-      return cb(new Error(`Unexpected status code ${res.statusCode}`));
-    }
-    res.pipe(file);
-    file.on('finish', () => file.close(() => cb(null)));
-  }).on('error', err => {
-    try { file.close(); } catch { /* */ }
-    try { fs.unlinkSync(dest); } catch { /* */ }
-    cb(err);
-  });
-}
-
 // Perform download
-download(url, archivePath, err => {
-  if (err) {
-    log(`Download failed: ${(err as Error).message}`);
-    log('Installation will continue; please supply dictionaries manually.');
-    return;
-  }
-  log(`Downloaded archive to ${archivePath}`);
-  log('Extract the archive contents into the same directory if needed.');
-  log('Example (tar.gz):');
-  log(`  tar -xzf ${archivePath} -C ${dictDir}`);
-});
+await download("postinstall", url, archivePath).then(
+  () => {
+    log("postinstall", `Downloaded archive to ${archivePath}`);
+    log("postinstall", 'Extract the archive contents into the same directory if needed.');
+    log("postinstall", 'Example (tar.gz):');
+    log("postinstall", `  tar -xzf ${archivePath} -C ${dictDir}`);
+  },
+  (err) => {
+    if (err) {
+      log("postinstall", `Download failed: ${(err as Error).message}`);
+    }
+    log("postinstall", 'Installation will continue; please supply dictionaries manually.');
+  },
+);
