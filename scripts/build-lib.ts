@@ -63,6 +63,7 @@ ensureDir(vendorRoot);
       "-DSKIP_TESTING=1",
       "-DSKIP_JAVA=1",
       "-DSKIP_PYTHON=1",
+      "-DSKIP_SWIG=1",
       ".."
     ], buildDir);
     let installSucceeded = true;

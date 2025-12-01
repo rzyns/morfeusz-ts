@@ -21,7 +21,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { download, ensureDir, hasRealLib, log } from "./_lib.js";
+import { download, ensureDir, hasRealLib, log, dictDir as defaultDictDir } from "./_lib.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -44,7 +44,7 @@ try {
 // }
 
 // Determine dictionary target directory
-const dictDir = process.env.MORFEUSZ_DICT_DIR || path.join(__dirname, '..', 'dictionaries');
+const dictDir = process.env.MORFEUSZ_DICT_DIR || defaultDictDir;
 
 ensureDir(dictDir);
 

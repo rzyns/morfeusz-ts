@@ -6,6 +6,7 @@
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
+    "preinstall": "pnpm exec tsc -p scripts/tsconfig.json && node dist/scripts/preinstall.js",
     "build": "pnpm run build:native && pnpm run build:ts",
     "build:native": "node-gyp rebuild",
     "build:ts": "tsc",

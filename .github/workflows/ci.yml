@@ -46,6 +46,7 @@ jobs:
             ~/.npm
             ~/.cache/node-gyp
             build
+            dist/vendor/morfeusz2
           key: ${{ runner.os }}-node-${{ matrix.node }}-gyp-${{ hashFiles('**/binding.gyp') }}
           restore-keys: |
             ${{ runner.os }}-node-${{ matrix.node }}-gyp-
@@ -58,6 +59,7 @@ jobs:
             ~\AppData\Roaming\npm-cache
             ~\AppData\Local\node-gyp\Cache
             build
+            dist\vendor\morfeusz2
           key: ${{ runner.os }}-node-${{ matrix.node }}-gyp-${{ hashFiles('**/binding.gyp') }}
           restore-keys: |
             ${{ runner.os }}-node-${{ matrix.node }}-gyp-

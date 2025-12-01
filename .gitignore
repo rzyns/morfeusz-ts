@@ -4,3 +4,5 @@
 /node_modules
 /*.dict
 /*.tgz
+scripts/*.js
+.DS_Store

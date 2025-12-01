@@ -7,8 +7,10 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// Ensure paths resolve to project root even when running from dist/scripts
+const projectRoot = path.resolve(__dirname, '..', '..');
 
-export const dictDir: string = path.join(__dirname, '..', 'dictionaries');
+export const dictDir: string = path.join(projectRoot, 'dist', 'dictionaries');
 
 export const DICTS = [
   {
@@ -27,7 +29,7 @@ export const DICTS = [
 ] as const;
 
 export const SRC_URL: string = process.env.MORFEUSZ_SRC_URL || "http://download.sgjp.pl/morfeusz/20251116/morfeusz-src-20251116.tar.gz";
-export const vendorRoot: string = path.join(__dirname, "..", "vendor");
+export const vendorRoot: string = path.join(projectRoot, 'dist', 'vendor');
 export const vendorDir: string = path.join(vendorRoot, "morfeusz2");
 export const tarPath: string = path.join(vendorRoot, path.basename(SRC_URL));
 
