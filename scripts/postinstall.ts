@@ -17,7 +17,6 @@
  *       By default we DO NOT auto-download without an explicit URL because of
  *       licensing / reproducibility concerns. Provide MORFEUSZ_SGJP_URL to enable.
  */
-import "jiti/register";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as https from "node:https";
@@ -33,8 +32,7 @@ function log(msg: string) {
 // Always build lib from source; hard-fail if missing
 try {
   log('Building libmorfeusz2 from source...');
-  // Prefer invoking the TypeScript version directly; it registers jiti itself
-  const res = spawnSync(process.execPath, [path.join(__dirname, 'build-lib.ts')], { stdio: 'inherit' });
+  const res = spawnSync(process.execPath, [path.join(__dirname, 'build-lib.js')], { stdio: 'inherit' });
   if (res.status !== 0) {
     throw new Error('libmorfeusz2 build failed');
   }
@@ -44,10 +42,10 @@ try {
   process.exit(1);
 }
 
-if (process.env.MORFEUSZ_SKIP_DICT_DOWNLOAD) {
-  log('Skipping dictionary download (MORFEUSZ_SKIP_DICT_DOWNLOAD set).');
-  process.exit(0);
-}
+// if (process.env.MORFEUSZ_SKIP_DICT_DOWNLOAD) {
+//   log('Skipping dictionary download (MORFEUSZ_SKIP_DICT_DOWNLOAD set).');
+//   process.exit(0);
+// }
 
 // Determine dictionary target directory
 const dictDir = process.env.MORFEUSZ_DICT_DIR || path.join(__dirname, '..', 'dictionaries');

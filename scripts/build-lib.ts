@@ -9,7 +9,6 @@
  *
  * Hard-fails on errors to avoid stub fallback.
  */
-import "jiti/register";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";

@@ -13,8 +13,8 @@
     "lint": "eslint",
     "prepublishOnly": "pnpm run build",
     "test": "pnpm run build:native && vitest run",
-    "setup-dicts": "node scripts/setup.js",
-    "postinstall": "node scripts/postinstall.js",
+    "setup-dicts": "node dist/scripts/setup.js",
+    "postinstall": "node dist/scripts/postinstall.js",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "changelog:preview": "conventional-changelog -p angular -r 1",
     "prepare": "husky"
