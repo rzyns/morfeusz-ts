@@ -6,13 +6,11 @@
  */
 
 import MorfeuszFactory, {
-  MorphInterpretation,
   MorphUtils,
   WhitespaceHandling,
   CaseHandling,
   Charset,
-  MorfeuszUsage
-} from '../dist/index';
+} from '../src/index.js';
 
 console.log('=== Morfeusz-TS Example ===\n');
 

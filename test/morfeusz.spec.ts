@@ -3,7 +3,7 @@
  * Vitest-based tests for morfeusz-ts bindings (TypeScript)
  */
 import { describe } from 'vitest';
-import MorfeuszFactory, { WhitespaceHandling, MorphUtils } from '../src/index';
+import MorfeuszFactory, { WhitespaceHandling, MorphUtils } from '../src/index.js';
 
 describe('MorfeuszFactory static info', (test) => {
   test('provides version metadata', ({ expect }) => {

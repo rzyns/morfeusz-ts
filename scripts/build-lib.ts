@@ -16,17 +16,18 @@ import { fileURLToPath } from "node:url";
 import * as https from "node:https";
 import * as http from "node:http";
 import { spawnSync } from "node:child_process";
+import * as os from "node:os";
 
 const SRC_URL = process.env.MORFEUSZ_SRC_URL || "http://download.sgjp.pl/morfeusz/20251116/morfeusz-src-20251116.tar.gz";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const vendorDir = path.join(__dirname, "..", "vendor", "morfeusz2");
-const srcDir = path.join(__dirname, "..", "vendor", "morfeusz2-src");
-const tarPath = path.join(__dirname, "..", "vendor", path.basename(SRC_URL));
+const vendorRoot = path.join(__dirname, "..", "vendor");
+const vendorDir = path.join(vendorRoot, "morfeusz2");
+const tarPath = path.join(vendorRoot, path.basename(SRC_URL));
 
 function log(msg: string) { console.log(`[build-lib] ${msg}`); }
 function ensureDir(p: string) { fs.mkdirSync(p, { recursive: true }); }
 
-ensureDir(path.join(__dirname, "..", "vendor"));
+ensureDir(vendorRoot);
 
 function download(url: string, dest: string) {
   return new Promise<void>((resolve, reject) => {
@@ -66,30 +67,44 @@ function run(cmd: string, args: string[], cwd: string) {
 (async function main() {
   try {
     await download(SRC_URL, tarPath);
-    // Extract tarball
-    ensureDir(srcDir);
     log(`Extracting ${tarPath} ...`);
-    run("tar", ["-xzf", tarPath, "-C", path.join(__dirname, "..", "vendor")], process.cwd());
-    // Find extracted top-level directory (morfeusz-*/)
-    const vendorRoot = path.join(__dirname, "..", "vendor");
-    const extracted = fs.readdirSync(vendorRoot).find(d => /morfeusz[-_]?src|morfeusz[-_]?\d+/.test(d) && fs.existsSync(path.join(vendorRoot, d, "configure")));
-    const buildSrc = extracted ? path.join(vendorRoot, extracted) : srcDir;
-    if (!fs.existsSync(path.join(buildSrc, "configure"))) throw new Error("configure script not found in source tree");
+    run("tar", ["-xzf", tarPath, "-C", vendorRoot], process.cwd());
+    const extracted = fs.readdirSync(vendorRoot).find(d => /Morfeusz/.test(d) && fs.existsSync(path.join(vendorRoot, d, "CMakeLists.txt")));
+    const buildSrc = extracted ? path.join(vendorRoot, extracted) : null;
+    if (!buildSrc) throw new Error("CMakeLists.txt not found in source tree");
     ensureDir(vendorDir);
-    // Configure, make, make install
-    run("bash", ["-c", `./configure --prefix='${vendorDir}'`], buildSrc);
-    run("make", ["-j", String(Math.max(1, require("os").cpus()?.length || 1))], buildSrc);
-    run("make", ["install"], buildSrc);
-    // Verify outputs
+    const buildDir = path.join(buildSrc, "build");
+    ensureDir(buildDir);
+    // Configure with CMake and install into vendorDir
+    run("cmake", [
+      "-DCMAKE_BUILD_TYPE=Release",
+      `-DCMAKE_INSTALL_PREFIX=${vendorDir}`,
+      "-DSKIP_TESTING=1",
+      "-DSKIP_JAVA=1",
+      "-DSKIP_PYTHON=1",
+      ".."
+    ], buildDir);
+    let installSucceeded = true;
+    try {
+      run("cmake", ["--build", ".", "--config", "Release", "--target", "install", "--", `-j${Math.max(1, os.cpus()?.length || 1)}`], buildDir);
+    } catch {
+      installSucceeded = false;
+      log("Install target failed; attempting salvage of core artifacts.");
+    }
+    // Salvage library and header from build tree if install failed
+    const builtSo = path.join(buildDir, "morfeusz", "libmorfeusz2.so");
+    const builtA  = path.join(buildDir, "morfeusz", "libmorfeusz2.a");
+    ensureDir(path.join(vendorDir, "lib"));
+    ensureDir(path.join(vendorDir, "include"));
+    if (fs.existsSync(builtSo)) fs.copyFileSync(builtSo, path.join(vendorDir, "lib", "libmorfeusz2.so"));
+    if (fs.existsSync(builtA)) fs.copyFileSync(builtA, path.join(vendorDir, "lib", "libmorfeusz2.a"));
+    const headerSrc = path.join(buildSrc, "morfeusz", "morfeusz2.h");
+    if (fs.existsSync(headerSrc)) fs.copyFileSync(headerSrc, path.join(vendorDir, "include", "morfeusz2.h"));
     const hdrOk = fs.existsSync(path.join(vendorDir, "include", "morfeusz2.h"));
-    const libCandidates = [
-      path.join(vendorDir, "lib", "libmorfeusz2.so"),
-      path.join(vendorDir, "lib", "libmorfeusz2.a"),
-    ];
-    const libOk = libCandidates.some(p => fs.existsSync(p));
+    const libOk = fs.existsSync(path.join(vendorDir, "lib", "libmorfeusz2.so")) || fs.existsSync(path.join(vendorDir, "lib", "libmorfeusz2.a"));
     if (!hdrOk || !libOk) throw new Error("Morfeusz2 build produced no header or library");
-    log(`Built libmorfeusz2 into ${vendorDir}`);
-    // Emit hint for node-gyp
+    log(`Core library ready in ${vendorDir}${installSucceeded ? '' : ' (partial install without wrappers)'}`);
+    // Hint for node-gyp consumers
     process.env.MORFEUSZ_PREFIX = vendorDir;
   } catch (e) {
     log(`Failed: ${(e as Error).message}`);

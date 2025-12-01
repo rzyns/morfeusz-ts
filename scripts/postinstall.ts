@@ -22,6 +22,9 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as https from "node:https";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function log(msg: string) {
   console.log(`[morfeusz-ts setup] ${msg}`);
@@ -30,7 +33,8 @@ function log(msg: string) {
 // Always build lib from source; hard-fail if missing
 try {
   log('Building libmorfeusz2 from source...');
-  const res = spawnSync(process.execPath, [path.join(__dirname, 'build-lib.js')], { stdio: 'inherit' });
+  // Prefer invoking the TypeScript version directly; it registers jiti itself
+  const res = spawnSync(process.execPath, [path.join(__dirname, 'build-lib.ts')], { stdio: 'inherit' });
   if (res.status !== 0) {
     throw new Error('libmorfeusz2 build failed');
   }
@@ -45,7 +49,6 @@ if (process.env.MORFEUSZ_SKIP_DICT_DOWNLOAD) {
   process.exit(0);
 }
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
 // Determine dictionary target directory
 const dictDir = process.env.MORFEUSZ_DICT_DIR || path.join(__dirname, '..', 'dictionaries');
 
@@ -80,7 +83,7 @@ function hasRealLib() {
 }
 
 if (hasRealLib()) {
-  log('Detected libmorfeusz2; expecting system dictionaries to be accessible via library defaults.');
+  log('Detected libmorfeusz2; expecting system dictionaries accessible via library defaults.');
 } else {
   log('Did NOT detect libmorfeusz2 via ldconfig; library may be in local vendor path.');
 }
@@ -89,8 +92,8 @@ if (hasRealLib()) {
 const url = process.env.MORFEUSZ_SGJP_URL;
 if (!url) {
   log('No MORFEUSZ_SGJP_URL provided; skipping automatic dictionary download.');
-  log('To enable: set MORFEUSZ_SGJP_URL to the SGJP dictionary archive URL and reinstall.');
-  log(`Target directory (can override via MORFEUSZ_DICT_DIR): ${dictDir}`);
+  log('Set MORFEUSZ_SGJP_URL to enable downloading during install.');
+  log(`Target dictionary directory: ${dictDir}`);
   process.exit(0);
 }
 
@@ -129,8 +132,7 @@ download(url, archivePath, err => {
     return;
   }
   log(`Downloaded archive to ${archivePath}`);
-  // Extraction left to user because archive format may vary (zip/tar). Provide hint.
-  log('Please extract the archive contents into the same directory if not already in raw form.');
-  log('Example (if tar.gz):');
+  log('Extract the archive contents into the same directory if needed.');
+  log('Example (tar.gz):');
   log(`  tar -xzf ${archivePath} -C ${dictDir}`);
 });
