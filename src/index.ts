@@ -24,4 +24,7 @@ export { type Deserializer, type State as FSAState, SimpleFSA, SimpleState } fro
 export { InterpsGroupsReader } from "./core/deserialization/InterpsGroupsReader.js";
 export { MorphDeserializer } from "./core/deserialization/MorphDeserializer.js";
 export { DemoStringFSA } from "./core/fsa/DemoStringFSA.js";
+export { DictionariesRepository } from "./core/dictionary/DictionariesRepository.js";
+export { Dictionary } from "./core/dictionary/Dictionary.js";
+export { MorfeuszProcessorType } from "./core/dictionary/const.js";
 
