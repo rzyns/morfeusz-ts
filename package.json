@@ -4,7 +4,7 @@
   "description": "TypeScript port of Morfeusz 2 - Polish morphological analyzer",
   "type": "module",
   "scripts": {
-    "builds": "tsc",
+    "build": "tsc",
     "clean": "rm -rf build dist",
     "lint": "eslint",
     "prepublishOnly": "pnpm run build",
