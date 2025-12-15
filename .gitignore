@@ -1,0 +1,8 @@
+/dictionaries
+/build
+/dist
+/node_modules
+/*.dict
+/*.tgz
+scripts/*.js
+.DS_Store

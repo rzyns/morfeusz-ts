@@ -1,0 +1,5 @@
+{
+    "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+    "typescript.tsserver.web.projectWideIntellisense.enabled": true,
+    "typescript.tsdk": "node_modules/typescript/lib"
+}
