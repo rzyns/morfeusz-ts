@@ -21,4 +21,7 @@ export { CaseConverter } from "./core/case/CaseConverter.js";
 export { CasePatternHelper } from "./core/case/CasePatternHelper.js";
 export * as BinaryReaders from "./core/binary/readers.js";
 export { type Deserializer, type State as FSAState, SimpleFSA, SimpleState } from "./core/fsa/FSA.js";
+export { InterpsGroupsReader } from "./core/deserialization/InterpsGroupsReader.js";
+export { MorphDeserializer } from "./core/deserialization/MorphDeserializer.js";
+export { DemoStringFSA } from "./core/fsa/DemoStringFSA.js";
 
