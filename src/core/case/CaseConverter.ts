@@ -3,6 +3,23 @@ import { CaseHandling } from "../../core/types.js";
 export class CaseConverter {
   toLower(s: string): string { return s.toLocaleLowerCase("pl-PL"); }
   toUpper(s: string): string { return s.toLocaleUpperCase("pl-PL"); }
+  toTitle(s: string): string {
+    if (!s) return s;
+    const lower = this.toLower(s);
+    // Use Intl.Segmenter to avoid splitting multi-codepoint grapheme clusters
+    const seg = (typeof Intl !== "undefined" && (Intl as any).Segmenter)
+      ? new (Intl as any).Segmenter("pl-PL", { granularity: "grapheme" })
+      : null;
+    if (seg) {
+      const it = seg.segment(lower)[Symbol.iterator]();
+      const firstSeg = it.next();
+      const first = firstSeg.value?.segment ?? lower[0] ?? "";
+      const rest = lower.slice(first.length);
+      return first.toLocaleUpperCase("pl-PL") + rest;
+    }
+    const first = lower[0]?.toLocaleUpperCase("pl-PL") ?? "";
+    return first + lower.slice(1);
+  }
   equals(a: string, b: string, handling: CaseHandling): boolean {
     switch (handling) {
       case CaseHandling.IGNORE_CASE:

@@ -1,7 +1,7 @@
 export interface InterpsGroup {
   type: number;
-  ptr: number; // offset within backing buffer
-  size: number;
+  ptr: number; // offset within backing buffer, points at the group's compression byte
+  size: number; // number of bytes in the group content starting at ptr
 }
 
 /**
@@ -21,17 +21,34 @@ export class InterpsGroupsReader {
     this._iter = 0;
   }
 
-  hasNext(): boolean {
-    return this._iter < this._size;
+  getView(): DataView {
+    if (!this._view) throw new Error('reader not initialized');
+    return this._view;
   }
+
+  hasNext(): boolean { return this._iter < this._size; }
 
   getNext(): InterpsGroup {
     if (!this._view) throw new Error('reader not initialized');
     if (!this.hasNext()) throw new RangeError('end of groups');
-    // For scaffolding: treat each byte as a single group with that type
-    const offset = this._start + this._iter;
-    const type = this._view.getUint8(offset);
-    this._iter += 1;
-    return { type, ptr: offset, size: 1 };
+    const off = this._start + this._iter;
+    // If there aren't enough bytes for type+size, fall back to single-byte groups (demo payloads)
+    if (this._iter + 3 > this._size) {
+      const b = this._view.getUint8(off);
+      this._iter += 1;
+      return { type: b, ptr: off, size: 1 };
+    }
+    const type = this._view.getUint8(off);
+    const size = this._view.getUint16(off + 1, false);
+    const contentStart = off + 3; // after type+size
+    // Validate size; fallback for legacy demo payloads without type/size framing
+    if (contentStart + size > this._start + this._size) {
+      // Fallback: treat single byte as a group
+      const b = this._view.getUint8(off);
+      this._iter += 1;
+      return { type: b, ptr: off, size: 1 };
+    }
+    this._iter += 3 + size;
+    return { type, ptr: contentStart, size };
   }
 }
