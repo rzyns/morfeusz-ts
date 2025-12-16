@@ -4,102 +4,119 @@ import { InterpsGroupsDecoder } from "../src/core/deserialization/InterpsGroupsD
 import { CaseHandling } from "../src/core/types.js";
 
 const CompressionFlags = {
-  ORTH_ONLY_LOWER: 0x80,
-  ORTH_ONLY_TITLE: 0x40,
-  LEMMA_ONLY_LOWER: 0x20,
-  LEMMA_ONLY_TITLE: 0x10,
-  PREFIX_CUT_MASK: 0x0f,
+	ORTH_ONLY_LOWER: 0x80,
+	ORTH_ONLY_TITLE: 0x40,
+	LEMMA_ONLY_LOWER: 0x20,
+	LEMMA_ONLY_TITLE: 0x10,
+	PREFIX_CUT_MASK: 0x0f
 } as const;
 
 function makeGroupBuffer(typeByte: number, contentBytes: number[]): DataView {
-  const size = contentBytes.length;
-  const arr = new Uint8Array(1 + 2 + size);
-  arr[0] = typeByte & 0xff;
-  arr[1] = (size >>> 8) & 0xff;
-  arr[2] = size & 0xff;
-  for (let i = 0; i < size; i++) arr[3 + i] = contentBytes[i] & 0xff;
-  return new DataView(arr.buffer);
+	const size = contentBytes.length;
+	const arr = new Uint8Array(1 + 2 + size);
+	arr[0] = typeByte & 0xff;
+	arr[1] = (size >>> 8) & 0xff;
+	arr[2] = size & 0xff;
+	for (let i = 0; i < size; i++) arr[3 + i] = contentBytes[i] & 0xff;
+	return new DataView(arr.buffer);
 }
 
-function cstr(s: string): number[] { return [...Buffer.from(s, "utf8"), 0]; }
+function cstr(s: string): number[] {
+	return [...Buffer.from(s, "utf8"), 0];
+}
 
 function makeMinimalContent(type: number) {
-  const suffixToCut = 0;
-  const tag = 1;
-  const name = 0;
-  const labels = 0;
-  return [
-    type & 0xff,
-    suffixToCut & 0xff,
-    ...cstr(""),
-    (tag >>> 8) & 0xff,
-    tag & 0xff,
-    name & 0xff,
-    (labels >>> 8) & 0xff,
-    labels & 0xff,
-  ];
+	const suffixToCut = 0;
+	const tag = 1;
+	const name = 0;
+	const labels = 0;
+	return [
+		type & 0xff,
+		suffixToCut & 0xff,
+		...cstr(""),
+		(tag >>> 8) & 0xff,
+		tag & 0xff,
+		name & 0xff,
+		(labels >>> 8) & 0xff,
+		labels & 0xff
+	];
 }
 
 describe("orth-case filtering", () => {
-  it("drops mismatched lowercase when STRICT", () => {
-    const type = CompressionFlags.ORTH_ONLY_LOWER;
-    const view = makeGroupBuffer(type, makeMinimalContent(type));
-    const reader = new InterpsGroupsReader();
-    reader.update(view, 0, view.byteLength);
-    const dec = new InterpsGroupsDecoder();
-    const res = dec.decode("WORD", reader, {
-      getTagsetId: () => "",
-      getTag: () => "",
-      getTagId: () => 0,
-      getName: () => "",
-      getNameId: () => 0,
-      getLabelsAsString: () => "",
-      getLabels: () => new Set<string>(),
-      getLabelsId: () => 0,
-      getTagsCount: () => 0,
-      getNamesCount: () => 0,
-      getLabelsCount: () => 0,
-    }, CaseHandling.STRICTLY_CASE_SENSITIVE);
-    // Decoder returns ign when out is empty; but we want to ensure filtering applied
-    // So assert there is one ign entry
-    expect(res[0].tagId).toBe(0);
-    expect(res[0].orth).toBe("WORD");
-  });
+	it("drops mismatched lowercase when STRICT", () => {
+		const type = CompressionFlags.ORTH_ONLY_LOWER;
+		const view = makeGroupBuffer(type, makeMinimalContent(type));
+		const reader = new InterpsGroupsReader();
+		reader.update(view, 0, view.byteLength);
+		const dec = new InterpsGroupsDecoder();
+		const res = dec.decode(
+			"WORD",
+			reader,
+			{
+				getTagsetId: () => "",
+				getTag: () => "",
+				getTagId: () => 0,
+				getName: () => "",
+				getNameId: () => 0,
+				getLabelsAsString: () => "",
+				getLabels: () => new Set<string>(),
+				getLabelsId: () => 0,
+				getTagsCount: () => 0,
+				getNamesCount: () => 0,
+				getLabelsCount: () => 0
+			},
+			CaseHandling.STRICTLY_CASE_SENSITIVE
+		);
+		// Decoder returns ign when out is empty; but we want to ensure filtering applied
+		// So assert there is one ign entry
+		expect(res[0].tagId).toBe(0);
+		expect(res[0].orth).toBe("WORD");
+	});
 
-  it("keeps title-case only when STRICT", () => {
-    const type = CompressionFlags.ORTH_ONLY_TITLE;
-    const view = makeGroupBuffer(type, makeMinimalContent(type));
-    const reader = new InterpsGroupsReader();
-    reader.update(view, 0, view.byteLength);
-    const dec = new InterpsGroupsDecoder();
-    const ok = dec.decode("Word", reader, {
-      getTagsetId: () => "",
-      getTag: () => "",
-      getTagId: () => 0,
-      getName: () => "",
-      getNameId: () => 0,
-      getLabelsAsString: () => "",
-      getLabels: () => new Set<string>(),
-      getLabelsId: () => 0,
-      getTagsCount: () => 0,
-      getNamesCount: () => 0,
-      getLabelsCount: () => 0,
-    }, CaseHandling.STRICTLY_CASE_SENSITIVE);
-    expect(ok[0].tagId).toBe(1);
+	it("keeps title-case only when STRICT", () => {
+		const type = CompressionFlags.ORTH_ONLY_TITLE;
+		const view = makeGroupBuffer(type, makeMinimalContent(type));
+		const reader = new InterpsGroupsReader();
+		reader.update(view, 0, view.byteLength);
+		const dec = new InterpsGroupsDecoder();
+		const ok = dec.decode(
+			"Word",
+			reader,
+			{
+				getTagsetId: () => "",
+				getTag: () => "",
+				getTagId: () => 0,
+				getName: () => "",
+				getNameId: () => 0,
+				getLabelsAsString: () => "",
+				getLabels: () => new Set<string>(),
+				getLabelsId: () => 0,
+				getTagsCount: () => 0,
+				getNamesCount: () => 0,
+				getLabelsCount: () => 0
+			},
+			CaseHandling.STRICTLY_CASE_SENSITIVE
+		);
+		expect(ok[0].tagId).toBe(1);
 
-    const bad = dec.decode("word", reader, {
-      getTagsetId: () => "",
-      getTag: () => "",
-      getTagId: () => 0,
-      getName: () => "",
-      getNameId: () => 0,
-      getLabelsAsString: () => "",
-      getLabels: () => new Set<string>(),
-      getLabelsId: () => 0,
-      getTagsCount: () => 0,
-      getNamesCount: () => 0,
-      getLabelsCount: () => 0,
-    }, CaseHandling.STRICTLY_CASE_SENSITIVE);
-    expect(bad[0].tagId).toBe(0);
-  });
+		const bad = dec.decode(
+			"word",
+			reader,
+			{
+				getTagsetId: () => "",
+				getTag: () => "",
+				getTagId: () => 0,
+				getName: () => "",
+				getNameId: () => 0,
+				getLabelsAsString: () => "",
+				getLabels: () => new Set<string>(),
+				getLabelsId: () => 0,
+				getTagsCount: () => 0,
+				getNamesCount: () => 0,
+				getLabelsCount: () => 0
+			},
+			CaseHandling.STRICTLY_CASE_SENSITIVE
+		);
+		expect(bad[0].tagId).toBe(0);
+	});
 });

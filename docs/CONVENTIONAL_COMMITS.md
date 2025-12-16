@@ -3,6 +3,7 @@
 Use meaningful scopes to clarify the area impacted by a change.
 
 Recommended scopes:
+
 - core: main TypeScript API surface (`src/index.ts`, types)
 - native: C++ addon code (`native/`)
 - dict: dictionary setup or verification scripts
@@ -16,6 +17,7 @@ Recommended scopes:
 - security: security-related changes
 
 Examples:
+
 ```
 feat(core): add generateWithTag helper overload
 fix(native): handle empty lemma gracefully
@@ -24,6 +26,7 @@ docs(contributing): document conventional commit scopes
 ```
 
 Breaking changes:
+
 ```
 feat(core)!: drop deprecated analyseLegacy method
 

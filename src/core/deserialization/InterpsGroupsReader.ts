@@ -1,7 +1,7 @@
 export interface InterpsGroup {
-  type: number;
-  ptr: number; // offset within backing buffer, points at the group's compression byte
-  size: number; // number of bytes in the group content starting at ptr
+	type: number;
+	ptr: number; // offset within backing buffer, points at the group's compression byte
+	size: number; // number of bytes in the group content starting at ptr
 }
 
 /**
@@ -9,46 +9,48 @@ export interface InterpsGroup {
  * For now, store raw view boundaries; actual decode can happen in a separate decoder.
  */
 export class InterpsGroupsReader {
-  private _view: DataView | null = null;
-  private _start = 0;
-  private _size = 0;
-  private _iter = 0;
+	private _view: DataView | null = null;
+	private _start = 0;
+	private _size = 0;
+	private _iter = 0;
 
-  update(view: DataView, startOffset: number, size: number): void {
-    this._view = view;
-    this._start = startOffset;
-    this._size = size;
-    this._iter = 0;
-  }
+	update(view: DataView, startOffset: number, size: number): void {
+		this._view = view;
+		this._start = startOffset;
+		this._size = size;
+		this._iter = 0;
+	}
 
-  getView(): DataView {
-    if (!this._view) throw new Error('reader not initialized');
-    return this._view;
-  }
+	getView(): DataView {
+		if (!this._view) throw new Error("reader not initialized");
+		return this._view;
+	}
 
-  hasNext(): boolean { return this._iter < this._size; }
+	hasNext(): boolean {
+		return this._iter < this._size;
+	}
 
-  getNext(): InterpsGroup {
-    if (!this._view) throw new Error('reader not initialized');
-    if (!this.hasNext()) throw new RangeError('end of groups');
-    const off = this._start + this._iter;
-    // If there aren't enough bytes for type+size, fall back to single-byte groups (demo payloads)
-    if (this._iter + 3 > this._size) {
-      const b = this._view.getUint8(off);
-      this._iter += 1;
-      return { type: b, ptr: off, size: 1 };
-    }
-    const type = this._view.getUint8(off);
-    const size = this._view.getUint16(off + 1, false);
-    const contentStart = off + 3; // after type+size
-    // Validate size; fallback for legacy demo payloads without type/size framing
-    if (contentStart + size > this._start + this._size) {
-      // Fallback: treat single byte as a group
-      const b = this._view.getUint8(off);
-      this._iter += 1;
-      return { type: b, ptr: off, size: 1 };
-    }
-    this._iter += 3 + size;
-    return { type, ptr: contentStart, size };
-  }
+	getNext(): InterpsGroup {
+		if (!this._view) throw new Error("reader not initialized");
+		if (!this.hasNext()) throw new RangeError("end of groups");
+		const off = this._start + this._iter;
+		// If there aren't enough bytes for type+size, fall back to single-byte groups (demo payloads)
+		if (this._iter + 3 > this._size) {
+			const b = this._view.getUint8(off);
+			this._iter += 1;
+			return { type: b, ptr: off, size: 1 };
+		}
+		const type = this._view.getUint8(off);
+		const size = this._view.getUint16(off + 1, false);
+		const contentStart = off + 3; // after type+size
+		// Validate size; fallback for legacy demo payloads without type/size framing
+		if (contentStart + size > this._start + this._size) {
+			// Fallback: treat single byte as a group
+			const b = this._view.getUint8(off);
+			this._iter += 1;
+			return { type: b, ptr: off, size: 1 };
+		}
+		this._iter += 3 + size;
+		return { type, ptr: contentStart, size };
+	}
 }
