@@ -153,6 +153,20 @@ export class MorfeuszImpl {
 		return this.options.caseHandling;
 	}
 
+	// Convenience methods for case preference
+	strictCase(): this {
+		this.setCaseHandling(CaseHandling.STRICTLY_CASE_SENSITIVE);
+		return this;
+	}
+	preferMatchingCase(): this {
+		this.setCaseHandling(CaseHandling.CONDITIONALLY_CASE_SENSITIVE);
+		return this;
+	}
+	ignoreCase(): this {
+		this.setCaseHandling(CaseHandling.IGNORE_CASE);
+		return this;
+	}
+
 	setTokenNumbering(tn: TokenNumbering): void {
 		this.options.tokenNumbering = tn;
 		this.nextNodeNum = 0;
