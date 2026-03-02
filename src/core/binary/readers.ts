@@ -28,7 +28,7 @@ export function readCString(
 		if (b === 0) break;
 		bytes.push(b);
 	}
-	const s = String.fromCharCode(...bytes);
+	const s = new TextDecoder("utf-8").decode(new Uint8Array(bytes));
 	return { value: s, next: i };
 }
 

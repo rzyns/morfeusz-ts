@@ -1,0 +1,30 @@
+{
+	"word": "iść",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:48.736Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "iść",
+			"lemma": "iścić",
+			"tag": "impt:sg:sec:imperf",
+			"name": "_",
+			"labels": [
+				"daw."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "iść",
+			"lemma": "iść",
+			"tag": "inf:imperf",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

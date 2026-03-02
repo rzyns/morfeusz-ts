@@ -1,0 +1,28 @@
+{
+	"word": "lub",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:49.184Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "lub",
+			"lemma": "lubić",
+			"tag": "impt:sg:sec:imperf",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "lub",
+			"lemma": "lub",
+			"tag": "conj",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

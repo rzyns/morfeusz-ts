@@ -1,0 +1,42 @@
+{
+	"word": "miasto",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:48.276Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "miasto",
+			"lemma": "miasto:S",
+			"tag": "subst:sg:nom.acc.voc:n:ncol",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "miasto",
+			"lemma": "miasto:C",
+			"tag": "conj",
+			"name": "_",
+			"labels": [
+				"daw."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "miasto",
+			"lemma": "miasto:P",
+			"tag": "prep:gen",
+			"name": "_",
+			"labels": [
+				"daw."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

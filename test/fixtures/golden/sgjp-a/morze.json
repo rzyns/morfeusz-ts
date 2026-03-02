@@ -1,0 +1,72 @@
+{
+	"word": "morze",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:48.329Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "morze",
+			"lemma": "morze",
+			"tag": "subst:sg:nom.acc.voc:n:ncol",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "morze",
+			"lemma": "mor",
+			"tag": "subst:sg:loc:m3",
+			"name": "nazwa_pospolita",
+			"labels": [
+				"daw."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "morze",
+			"lemma": "mor",
+			"tag": "subst:sg:voc:m3",
+			"name": "nazwa_pospolita",
+			"labels": [
+				"daw."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "morze",
+			"lemma": "mora",
+			"tag": "subst:sg:dat.loc:f",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "morze",
+			"lemma": "mór",
+			"tag": "subst:sg:loc:m3",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "morze",
+			"lemma": "mór",
+			"tag": "subst:sg:voc:m3",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

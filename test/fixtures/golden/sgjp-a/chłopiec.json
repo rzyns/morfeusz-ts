@@ -1,0 +1,18 @@
+{
+	"word": "chłopiec",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:47.897Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "chłopiec",
+			"lemma": "chłopiec",
+			"tag": "subst:sg:nom:m1",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

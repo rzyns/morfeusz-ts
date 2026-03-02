@@ -1,0 +1,42 @@
+{
+	"word": "ono",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:49.346Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "ono",
+			"lemma": "on:S",
+			"tag": "ppron3:sg:nom:n:ter:akc.nakc:praep.npraep",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "ono",
+			"lemma": "on:A",
+			"tag": "adj:sg:acc:n:pos",
+			"name": "_",
+			"labels": [
+				"daw."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "ono",
+			"lemma": "on:A",
+			"tag": "adj:sg:nom.voc:n:pos",
+			"name": "_",
+			"labels": [
+				"daw."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

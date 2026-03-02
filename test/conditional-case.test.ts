@@ -27,9 +27,11 @@ function minimalContent(type: number, tag: number) {
 	const suffixToCut = 0;
 	const name = 0;
 	const labels = 0;
+	// preLoopByte at content[1] only present for groupTypeByte=0x00 (bit7 and bit6 both clear)
+	const hasPreLoopByte = (type & 0xc0) === 0;
 	return [
-		type & 0xff, // PLACEHOLDER
-		type & 0xff,
+		type & 0xff, // groupTypeByte
+		...(hasPreLoopByte ? [0x00] : []), // preLoopByte only for 0x00-type groups
 		suffixToCut & 0xff,
 		...cstr(""),
 		(tag >>> 8) & 0xff,

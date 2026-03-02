@@ -1,0 +1,28 @@
+{
+	"word": "nieprzyzwyczajony",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:50.661Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "nieprzyzwyczajony",
+			"lemma": "przyzwyczaić",
+			"tag": "ppas:sg:acc:m3:perf:neg",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "nieprzyzwyczajony",
+			"lemma": "przyzwyczaić",
+			"tag": "ppas:sg:nom.voc:m1.m2.m3:perf:neg",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

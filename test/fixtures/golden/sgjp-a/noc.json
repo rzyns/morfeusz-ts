@@ -1,0 +1,28 @@
+{
+	"word": "noc",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:48.222Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "noc",
+			"lemma": "noc",
+			"tag": "subst:sg:nom:f",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "noc",
+			"lemma": "noc",
+			"tag": "subst:sg:acc:f",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

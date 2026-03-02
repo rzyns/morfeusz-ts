@@ -1,0 +1,18 @@
+{
+	"word": "matka",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:48.139Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "matka",
+			"lemma": "matka",
+			"tag": "subst:sg:nom:f",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

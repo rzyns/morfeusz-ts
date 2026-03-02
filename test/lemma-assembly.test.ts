@@ -44,7 +44,6 @@ describe("lemma assembly", () => {
 		const labels = 9;
 		const content = [
 			groupTypeByte,
-			0x00, // preLoopByte
 			suffixToCut,
 			...cstr(suffixToAdd),
 			(tag >>> 8) & 0xff, tag & 0xff,
@@ -66,10 +65,10 @@ describe("lemma assembly", () => {
 
 	it("reads explicit field0 byte when nibble==0xf (0xaf groupTypeByte)", () => {
 		// groupTypeByte=0xaf: bit7=1 (no orth case), bit5=1 (no lemma case), nibble=0xf (read field0)
-		// Content: [groupTypeByte:1][preLoopByte=0x00:1][field0:1][suffixToCut:1][suffixToAdd:cstr][tagId:u16be][nameId:u8][labelsId:u16be]
+		// Content: [groupTypeByte:1][field0:1 (explicit, nibble=0xf)][suffixToCut:1][suffixToAdd:cstr][tagId:u16be][nameId:u8][labelsId:u16be]
 		const orth = "hello";
 		const groupTypeByte = 0xaf;
-		const field0 = 0x02;
+		const field0 = 0x00; // explicit field0 byte (nibble=0xf), prefixToCut=0
 		const suffixToCut = 0;
 		const suffixToAdd = "o";
 		const tag = 12;
@@ -77,7 +76,6 @@ describe("lemma assembly", () => {
 		const labels = 77;
 		const content = [
 			groupTypeByte,
-			0x00, // preLoopByte
 			field0,
 			suffixToCut,
 			...cstr(suffixToAdd),

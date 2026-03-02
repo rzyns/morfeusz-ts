@@ -1,0 +1,31 @@
+{
+	"word": "kotów",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:49.862Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "kotów",
+			"lemma": "kot:Sm1",
+			"tag": "subst:pl:gen.acc:m1",
+			"name": "nazwa_pospolita",
+			"labels": [
+				"pot.",
+				"środ."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "kotów",
+			"lemma": "kot:Sm2",
+			"tag": "subst:pl:gen:m2",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

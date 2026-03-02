@@ -1,0 +1,18 @@
+{
+	"word": "qwerty",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:50.552Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "qwerty",
+			"lemma": "qwerty",
+			"tag": "ign",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

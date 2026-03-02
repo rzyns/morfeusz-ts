@@ -1,0 +1,28 @@
+{
+	"word": "że",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:49.127Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "że",
+			"lemma": "że:M",
+			"tag": "comp",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "że",
+			"lemma": "że:T",
+			"tag": "part",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

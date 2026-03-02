@@ -1,0 +1,28 @@
+{
+	"word": "przed",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:48.981Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "przed",
+			"lemma": "przed",
+			"tag": "prep:acc:nwok",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "przed",
+			"lemma": "przed",
+			"tag": "prep:inst:nwok",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

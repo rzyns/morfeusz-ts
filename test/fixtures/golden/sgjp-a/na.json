@@ -1,0 +1,38 @@
+{
+	"word": "na",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:48.845Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "na",
+			"lemma": "na:P",
+			"tag": "prep:acc",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "na",
+			"lemma": "na:P",
+			"tag": "prep:loc",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "na",
+			"lemma": "na:I",
+			"tag": "interj",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

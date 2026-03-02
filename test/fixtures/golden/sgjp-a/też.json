@@ -1,0 +1,38 @@
+{
+	"word": "też",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:49.577Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "też",
+			"lemma": "tenże",
+			"tag": "adj:pl:acc:m2.m3.f.n:pos",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "też",
+			"lemma": "tenże",
+			"tag": "adj:pl:nom.voc:m2.m3.f.n:pos",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "też",
+			"lemma": "też",
+			"tag": "part",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

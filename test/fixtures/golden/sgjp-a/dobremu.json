@@ -1,0 +1,50 @@
+{
+	"word": "dobremu",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:49.998Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "dobremu",
+			"lemma": "dobre",
+			"tag": "subst:sg:dat:n:ncol",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "dobremu",
+			"lemma": "dobry:Sm1",
+			"tag": "subst:sg:dat:m1",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "dobremu",
+			"lemma": "dobry:Sm3",
+			"tag": "subst:sg:dat:m3",
+			"name": "nazwa_pospolita",
+			"labels": [
+				"szkol."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "dobremu",
+			"lemma": "dobry:A",
+			"tag": "adj:sg:dat:m1.m2.m3.n:pos",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

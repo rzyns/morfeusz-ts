@@ -1,0 +1,18 @@
+{
+	"word": "przy",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:48.953Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "przy",
+			"lemma": "przy",
+			"tag": "prep:loc",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

@@ -1,0 +1,43 @@
+{
+	"word": "kret",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:47.950Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "kret",
+			"lemma": "kret:Sm1",
+			"tag": "subst:sg:nom:m1",
+			"name": "nazwa_pospolita",
+			"labels": [
+				"pot."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "kret",
+			"lemma": "kret:Sm2",
+			"tag": "subst:sg:nom:m2",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "kret",
+			"lemma": "kret:Sm3",
+			"tag": "subst:sg:nom.acc:m3",
+			"name": "nazwa_pospolita",
+			"labels": [
+				"roln.",
+				"techn."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

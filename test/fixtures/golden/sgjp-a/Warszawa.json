@@ -1,0 +1,38 @@
+{
+	"word": "Warszawa",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:50.356Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "Warszawa",
+			"lemma": "warszawa",
+			"tag": "subst:sg:nom:f",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Warszawa",
+			"lemma": "Warszawa:Sf",
+			"tag": "subst:sg:nom:f",
+			"name": "nazwa_geograficzna|nazwisko",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Warszawa",
+			"lemma": "Warszawa:Sm1",
+			"tag": "subst:sg:nom:m1",
+			"name": "nazwisko",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

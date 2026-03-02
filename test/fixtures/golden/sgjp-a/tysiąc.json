@@ -1,0 +1,50 @@
+{
+	"word": "tysiąc",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:49.754Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "tysiąc",
+			"lemma": "tysiąc:Sm2",
+			"tag": "subst:sg:nom:m2",
+			"name": "nazwa_pospolita",
+			"labels": [
+				"karc."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "tysiąc",
+			"lemma": "tysiąc:Sm3",
+			"tag": "subst:sg:nom.acc:m3",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "tysiąc",
+			"lemma": "tysiąc:N",
+			"tag": "num:pl:gen:m1.m2.m3.f.n:congr",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "tysiąc",
+			"lemma": "tysiąc:N",
+			"tag": "num:pl:nom.acc:m1.m2.m3.f.n:rec",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

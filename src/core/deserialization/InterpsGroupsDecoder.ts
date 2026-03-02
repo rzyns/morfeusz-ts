@@ -59,10 +59,6 @@ export class InterpsGroupsDecoder {
 			// First byte of content is groupTypeByte — controls per-interp binary layout.
 			// C++ processInterpsGroup reads it separately before calling decodeEncodedInterp.
 			const groupTypeByte = dv.getUint8(g.ptr);
-			let ptr = g.ptr + 2; // skip groupTypeByte (content[0]) + 1 extra byte consumed by processInterpsGroup (content[1])
-			const end = g.ptr + g.size;
-
-			const orthMatches = groupMatchesOrth(groupTypeByte, orth);
 
 			// Whether this group uses the "547d0 path" in C++ (bit6=1, bit7=0).
 			// That path does NOT call decodeEncodedForm, so no lemma case bytes from stream.
@@ -71,6 +67,13 @@ export class InterpsGroupsDecoder {
 			// Whether per-interp orth case pattern bytes exist in stream
 			// (absent when bit7=1 OR bit6=1)
 			const hasOrthCase = (groupTypeByte & 0xc0) === 0;
+
+			// preLoopByte at content[1] is only present when hasOrthCase (groupTypeByte=0x00).
+			// For 0xa0 (bit7=1) or 0x50 (bit6=1): no preLoopByte, loop starts at g.ptr+1.
+			let ptr = g.ptr + (hasOrthCase ? 2 : 1);
+			const end = g.ptr + g.size;
+
+			const orthMatches = groupMatchesOrth(groupTypeByte, orth);
 
 			// Whether per-interp lemma case pattern bytes exist in stream.
 			// Only present when decodeEncodedForm path is taken AND bit5=0 AND bit4=0.
@@ -87,11 +90,13 @@ export class InterpsGroupsDecoder {
 					if (ptr >= end) break;
 				}
 
-				// 2. Field0: nibble OR explicit byte if nibble==0xf
-				//    (passed to decodeLemma for case modification; not used in simplified decoder)
+				// 2. Field0: nibble value OR explicit byte if nibble==0xf
+				//    Encodes prefixToCut — number of chars to slice from the START of orth for lemma.
+				let field0 = nibble;
 				if (nibble === 0x0f) {
-					ptr++;
 					if (ptr >= end) break;
+					field0 = dv.getUint8(ptr);
+					ptr++;
 				}
 
 				// 3. suffixToCut (1 byte)
@@ -120,9 +125,11 @@ export class InterpsGroupsDecoder {
 				const labelsId = dv.getUint16(ptr, false);
 				ptr += 2;
 
-				// 7. lemma = orth[0..length-suffixToCut] + suffixToAdd
-				const stemEnd = Math.max(0, orth.length - suffixToCut);
-				const lemma = orth.slice(0, stemEnd) + suffixToAdd;
+				// 7. lemma = orth[prefixToCut..length-suffixToCut] + suffixToAdd
+				//    field0 = prefixToCut (chars to remove from START of orth)
+				const prefixToCut = field0;
+				const stemEnd = Math.max(prefixToCut, orth.length - suffixToCut);
+				const lemma = orth.slice(prefixToCut, stemEnd) + suffixToAdd;
 
 				groupInterps.push({
 					startNode: 0,

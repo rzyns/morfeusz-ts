@@ -1,0 +1,28 @@
+{
+	"word": "wy",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:49.399Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "wy",
+			"lemma": "wy",
+			"tag": "ppron12:pl:nom:m1.m2.m3.f.n:sec",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "wy",
+			"lemma": "wy",
+			"tag": "ppron12:pl:voc:m1.m2.m3.f.n:sec",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

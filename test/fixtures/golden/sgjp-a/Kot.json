@@ -1,0 +1,71 @@
+{
+	"word": "Kot",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:50.302Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "Kot",
+			"lemma": "Kot:Sf",
+			"tag": "subst:sg.pl:nom.gen.dat.acc.inst.loc.voc:f",
+			"name": "nazwisko",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Kot",
+			"lemma": "kot:Sm1",
+			"tag": "subst:sg:nom:m1",
+			"name": "nazwa_pospolita",
+			"labels": [
+				"pot.",
+				"środ."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Kot",
+			"lemma": "Kot:Sm1",
+			"tag": "subst:sg:nom:m1",
+			"name": "nazwisko",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Kot",
+			"lemma": "kot:Sm2",
+			"tag": "subst:sg:nom:m2",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Kot",
+			"lemma": "Kot:Sm3",
+			"tag": "subst:sg:nom.acc:m3",
+			"name": "nazwa_geograficzna",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Kot",
+			"lemma": "kota",
+			"tag": "subst:pl:gen:f",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

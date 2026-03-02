@@ -1,0 +1,28 @@
+{
+	"word": "ty",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:49.264Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "ty",
+			"lemma": "ty",
+			"tag": "ppron12:sg:nom:m1.m2.m3.f.n:sec",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "ty",
+			"lemma": "ty",
+			"tag": "ppron12:sg:voc:m1.m2.m3.f.n:sec",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

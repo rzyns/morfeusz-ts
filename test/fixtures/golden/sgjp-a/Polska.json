@@ -1,0 +1,58 @@
+{
+	"word": "Polska",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:50.522Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "Polska",
+			"lemma": "Polska:Sf~ej",
+			"tag": "subst:sg:nom:f",
+			"name": "nazwisko",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Polska",
+			"lemma": "Polska:Sf~ej",
+			"tag": "subst:sg:voc:f",
+			"name": "nazwisko",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Polska",
+			"lemma": "Polska:Sf~i",
+			"tag": "subst:sg:nom:f",
+			"name": "nazwa_geograficzna",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Polska",
+			"lemma": "polski:A",
+			"tag": "adjp:gen",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Polska",
+			"lemma": "polski:A",
+			"tag": "adj:sg:nom.voc:f:pos",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

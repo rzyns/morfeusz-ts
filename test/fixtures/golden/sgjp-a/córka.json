@@ -1,0 +1,18 @@
+{
+	"word": "córka",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:48.165Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "córka",
+			"lemma": "córka",
+			"tag": "subst:sg:nom:f",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

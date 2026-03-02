@@ -1,0 +1,31 @@
+{
+	"word": "rok",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:48.087Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "rok",
+			"lemma": "rok:Sm3~lata",
+			"tag": "subst:sg:nom.acc:m3",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "rok",
+			"lemma": "rok:Sm3~roki",
+			"tag": "subst:sg:nom.acc:m3",
+			"name": "nazwa_pospolita",
+			"labels": [
+				"daw.",
+				"praw."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

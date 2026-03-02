@@ -1,0 +1,18 @@
+{
+	"word": "mówić",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:48.570Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "mówić",
+			"lemma": "mówić",
+			"tag": "inf:imperf",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

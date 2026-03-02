@@ -1,0 +1,41 @@
+{
+	"word": "kota",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:49.835Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "kota",
+			"lemma": "kota",
+			"tag": "subst:sg:nom:f",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "kota",
+			"lemma": "kot:Sm1",
+			"tag": "subst:sg:gen.acc:m1",
+			"name": "nazwa_pospolita",
+			"labels": [
+				"pot.",
+				"środ."
+			],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "kota",
+			"lemma": "kot:Sm2",
+			"tag": "subst:sg:gen.acc:m2",
+			"name": "nazwa_pospolita",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

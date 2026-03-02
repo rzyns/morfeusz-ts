@@ -1,0 +1,18 @@
+{
+	"word": "powiedzieć",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:48.654Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "powiedzieć",
+			"lemma": "powiedzieć",
+			"tag": "inf:perf",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

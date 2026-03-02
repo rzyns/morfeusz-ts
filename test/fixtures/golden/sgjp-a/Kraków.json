@@ -1,0 +1,38 @@
+{
+	"word": "Kraków",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:50.440Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "Kraków",
+			"lemma": "Kraków",
+			"tag": "subst:sg:nom.acc:m3",
+			"name": "nazwa_geograficzna",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Kraków",
+			"lemma": "Krak:Sm1",
+			"tag": "subst:pl:gen.acc:m1",
+			"name": "imię|nazwisko",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Kraków",
+			"lemma": "Kraka:Sm1",
+			"tag": "subst:pl:gen.acc:m1",
+			"name": "nazwisko",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

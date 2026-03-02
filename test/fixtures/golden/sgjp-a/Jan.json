@@ -1,0 +1,58 @@
+{
+	"word": "Jan",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:50.494Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "Jan",
+			"lemma": "Ewangelia_świętego_Jana",
+			"tag": "brev:npun",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Jan",
+			"lemma": "Jan:Sf",
+			"tag": "subst:sg.pl:nom.gen.dat.acc.inst.loc.voc:f",
+			"name": "nazwisko",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Jan",
+			"lemma": "Jan:Sm1",
+			"tag": "subst:sg:nom:m1",
+			"name": "imię|nazwisko",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Jan",
+			"lemma": "Jana:Sf",
+			"tag": "subst:pl:gen:f",
+			"name": "nazwisko",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "Jan",
+			"lemma": "Jany:Sn_pt",
+			"tag": "subst:pl:gen:n:pt",
+			"name": "nazwa_geograficzna",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}

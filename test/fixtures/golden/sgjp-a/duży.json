@@ -1,0 +1,28 @@
+{
+	"word": "duży",
+	"dict": "sgjp",
+	"generatedAt": "2026-03-02T22:20:48.383Z",
+	"generatedBy": "morfeusz_analyzer 1.99.12",
+	"results": [
+		{
+			"orth": "duży",
+			"lemma": "duży",
+			"tag": "adj:sg:acc:m3:pos",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		},
+		{
+			"orth": "duży",
+			"lemma": "duży",
+			"tag": "adj:sg:nom.voc:m1.m2.m3:pos",
+			"name": "_",
+			"labels": [],
+			"tagId": null,
+			"nameId": null,
+			"labelsId": null
+		}
+	]
+}
