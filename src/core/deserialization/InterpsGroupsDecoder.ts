@@ -1,142 +1,168 @@
-import type {
-	InterpsGroupsReader,
-	InterpsGroup
-} from "./InterpsGroupsReader.js";
+import type { InterpsGroupsReader } from "./InterpsGroupsReader.js";
 import type { MorphInterpretation, IdResolver } from "../types.js";
 import { CaseHandling } from "../types.js";
-import {
-	isOrthOnlyLower,
-	isOrthOnlyTitle,
-	hasCompressedPrefixCut,
-	getPrefixCutLength,
-	isLemmaOnlyLower,
-	isLemmaOnlyTitle
-} from "./compression.js";
 import { readCString } from "../binary/readers.js";
-import { CaseConverter } from "../case/CaseConverter.js";
-import { CasePatternHelper } from "../case/CasePatternHelper.js";
+
+/**
+ * Skip a serialized CasePattern from the byte stream and return the new offset.
+ *
+ * Format (from C++ CasePatternHelper::deserializeOneCasePattern):
+ *   type=0x01  → 2 bytes (type + count)
+ *   type=0x02  → 2 + count bytes (type + count + count bytes)
+ *   any other  → 1 byte
+ */
+function skipCasePattern(dv: DataView, ptr: number): number {
+	const b = dv.getUint8(ptr);
+	if (b === 0x01) return ptr + 2;
+	if (b === 0x02) return ptr + 2 + dv.getUint8(ptr + 1);
+	return ptr + 1;
+}
+
+/**
+ * groupTypeByte flags (first content byte of each group):
+ *   bit7 (0x80): ORTH_ONLY_LOWER  — orth is all lowercase; no per-interp orth case pattern
+ *   bit6 (0x40): ORTH_ONLY_TITLE  — orth is title case; 547d0 path in C++, no orth case pattern per interp
+ *   bit5 (0x20): LEMMA_ONLY_LOWER — no per-interp lemma case pattern (skip it)
+ *   bit4 (0x10): LEMMA_ONLY_TITLE — no lemma case bytes from stream (bit stored inline)
+ *   bits3-0:     nibble; if 0xf → read 1 explicit field0 byte; else field0 = nibble (not used for lemma)
+ */
+function groupMatchesOrth(groupTypeByte: number, orth: string): boolean {
+	// ORTH_ONLY_LOWER (bit7=1, bit6=0): all forms in group are lowercase
+	if ((groupTypeByte & 0xc0) === 0x80) {
+		return orth === orth.toLowerCase();
+	}
+	// ORTH_ONLY_TITLE (bit6=1, bit7=0): all forms in group are title case
+	if ((groupTypeByte & 0xc0) === 0x40) {
+		return (
+			orth.length > 0 &&
+			orth[0] === orth[0].toUpperCase() &&
+			orth.slice(1) === orth.slice(1).toLowerCase()
+		);
+	}
+	return true; // no orth restriction
+}
 
 export class InterpsGroupsDecoder {
-	private getInterpretationsOffset(group: InterpsGroup): number {
-		// For analyzer payloads, groups start with a compression/type byte; interpretations follow immediately.
-		// If non-compressed patterns were present, they'd be here, but current implementation assumes compressed.
-		return group.ptr + 1;
-	}
-
 	decode(
 		orth: string,
 		reader: InterpsGroupsReader,
 		_ids: IdResolver,
-		handling: CaseHandling
+		handling: CaseHandling = CaseHandling.CONDITIONALLY_CASE_SENSITIVE
 	): MorphInterpretation[] {
 		const matched: MorphInterpretation[] = [];
 		const all: MorphInterpretation[] = [];
-		const conv = new CaseConverter();
-		const caseHelper = new CasePatternHelper(conv);
+
 		while (reader.hasNext()) {
 			const g = reader.getNext();
-			const start = this.getInterpretationsOffset(g);
-			let ptr = start;
-			const end = g.ptr + g.size;
 			const dv = reader.getView();
+
+			// First byte of content is groupTypeByte — controls per-interp binary layout.
+			// C++ processInterpsGroup reads it separately before calling decodeEncodedInterp.
+			const groupTypeByte = dv.getUint8(g.ptr);
+			let ptr = g.ptr + 2; // skip groupTypeByte (content[0]) + 1 extra byte consumed by processInterpsGroup (content[1])
+			const end = g.ptr + g.size;
+
+			const orthMatches = groupMatchesOrth(groupTypeByte, orth);
+
+			// Whether this group uses the "547d0 path" in C++ (bit6=1, bit7=0).
+			// That path does NOT call decodeEncodedForm, so no lemma case bytes from stream.
+			const takes547d0 = (groupTypeByte & 0xc0) === 0x40;
+
+			// Whether per-interp orth case pattern bytes exist in stream
+			// (absent when bit7=1 OR bit6=1)
+			const hasOrthCase = (groupTypeByte & 0xc0) === 0;
+
+			// Whether per-interp lemma case pattern bytes exist in stream.
+			// Only present when decodeEncodedForm path is taken AND bit5=0 AND bit4=0.
+			const hasLemmaCase = !takes547d0 && (groupTypeByte & 0x30) === 0;
+
+			const nibble = groupTypeByte & 0x0f;
+
+			const groupInterps: MorphInterpretation[] = [];
+
 			while (ptr < end) {
-				// Decode EncodedInterpretation fields according to C++ layout
-				// EncodedForm: prefixToCut, suffixToCut, suffixToAdd
-				let prefixToCut = 0;
-				if (hasCompressedPrefixCut(g.type)) {
-					prefixToCut = getPrefixCutLength(g.type) & 0xff;
-				} else {
-					if (ptr >= dv.byteLength) break;
-					prefixToCut = dv.getUint8(ptr);
-					ptr += 1;
+				// 1. Orth case pattern (skip — we return all interps regardless of case)
+				if (hasOrthCase) {
+					ptr = skipCasePattern(dv, ptr);
+					if (ptr >= end) break;
 				}
-				if (ptr >= dv.byteLength) break;
+
+				// 2. Field0: nibble OR explicit byte if nibble==0xf
+				//    (passed to decodeLemma for case modification; not used in simplified decoder)
+				if (nibble === 0x0f) {
+					ptr++;
+					if (ptr >= end) break;
+				}
+
+				// 3. suffixToCut (1 byte)
+				if (ptr >= end) break;
 				const suffixToCut = dv.getUint8(ptr);
-				ptr += 1;
-				// Read C-string suffixToAdd
-				const { value: suffixToAdd, next: nextAfterSuffix } =
+				ptr++;
+
+				// 4. NUL-terminated suffixToAdd
+				if (ptr >= end) break;
+				const { value: suffixToAdd, next: afterSuffix } =
 					readCString(dv, ptr);
-				ptr = nextAfterSuffix;
-				// Lemma case pattern: compressed via group.type flags; no explicit bytes when only-lower/title
-				// Tags
-				if (ptr + 2 > dv.byteLength) break;
-				const tag = dv.getUint16(ptr, false);
+				ptr = afterSuffix;
+
+				// 5. Lemma case pattern (skip)
+				if (hasLemmaCase) {
+					if (ptr >= end) break;
+					ptr = skipCasePattern(dv, ptr);
+				}
+
+				// 6. tagId[2 BE] + nameId[1] + labelsId[2 BE]
+				if (ptr + 5 > end) break;
+				const tagId = dv.getUint16(ptr, false);
 				ptr += 2;
-				let nameClassifier = 0;
-				if (ptr < dv.byteLength) {
-					nameClassifier = dv.getUint8(ptr);
-					ptr += 1;
-				}
-				let qualifiers = 0;
-				if (ptr + 2 <= dv.byteLength) {
-					qualifiers = dv.getUint16(ptr, false);
-					ptr += 2;
-				}
+				const nameId = dv.getUint8(ptr);
+				ptr++;
+				const labelsId = dv.getUint16(ptr, false);
+				ptr += 2;
 
-				// Assemble lemma from orth using cuts and addition
-				const safePrefix = Math.min(
-					Math.max(prefixToCut, 0),
-					orth.length
-				);
-				const safeSuffixCut = Math.min(
-					Math.max(suffixToCut, 0),
-					Math.max(orth.length - safePrefix, 0)
-				);
-				const coreEnd = Math.max(
-					orth.length - safeSuffixCut,
-					safePrefix
-				);
-				const core = orth.slice(safePrefix, coreEnd);
-				let lemma = core + suffixToAdd;
-				lemma = caseHelper.applyLemmaCase(lemma, g.type);
+				// 7. lemma = orth[0..length-suffixToCut] + suffixToAdd
+				const stemEnd = Math.max(0, orth.length - suffixToCut);
+				const lemma = orth.slice(0, stemEnd) + suffixToAdd;
 
-				const interp: MorphInterpretation = {
+				groupInterps.push({
 					startNode: 0,
 					endNode: 0,
 					orth,
 					lemma,
-					tagId: tag,
-					nameId: nameClassifier,
-					labelsId: qualifiers
-				};
-				const matchesStrict = caseHelper.orthMatches(
-					g.type,
-					orth,
-					CaseHandling.STRICTLY_CASE_SENSITIVE
-				);
-				all.push(interp);
-				if (handling === CaseHandling.STRICTLY_CASE_SENSITIVE) {
-					if (matchesStrict) matched.push(interp);
-				} else if (
-					handling === CaseHandling.CONDITIONALLY_CASE_SENSITIVE
-				) {
-					if (matchesStrict) matched.push(interp);
-				} else {
-					// IGNORE_CASE: keep everything
-					matched.push(interp);
-				}
+					tagId,
+					nameId,
+					labelsId
+				});
+			}
+
+			all.push(...groupInterps);
+			if (orthMatches) {
+				matched.push(...groupInterps);
 			}
 		}
-		// Preference/fallback policy
-		let res: MorphInterpretation[] = [];
-		if (handling === CaseHandling.STRICTLY_CASE_SENSITIVE) {
-			res = matched;
-		} else if (handling === CaseHandling.CONDITIONALLY_CASE_SENSITIVE) {
-			res = matched.length > 0 ? matched : all;
-		} else {
-			res = matched; // IGNORE_CASE == all
+
+		const results =
+			handling === CaseHandling.IGNORE_CASE
+				? all
+				: handling === CaseHandling.STRICTLY_CASE_SENSITIVE
+					? matched
+					: /* CONDITIONALLY_CASE_SENSITIVE */ matched.length > 0
+						? matched
+						: all;
+
+		if (results.length === 0) {
+			return [
+				{
+					startNode: 0,
+					endNode: 0,
+					orth,
+					lemma: orth,
+					tagId: 0,
+					nameId: 0,
+					labelsId: 0
+				}
+			];
 		}
-		if (res.length === 0) {
-			res.push({
-				startNode: 0,
-				endNode: 0,
-				orth,
-				lemma: orth,
-				tagId: 0,
-				nameId: 0,
-				labelsId: 0
-			});
-		}
-		return res;
+		return results;
 	}
 }

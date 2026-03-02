@@ -4,7 +4,7 @@ import { InterpsGroupsDecoder } from "../src/core/deserialization/InterpsGroupsD
 import { CaseHandling } from "../src/core/types.js";
 
 const CompressionFlags = {
-	ORTH_ONLY_LOWER: 0x80,
+	ORTH_ONLY_LOWER: 0xa0,  // 0x80|0x20: no orth case, no lemma case (correct format for real dict)
 	ORTH_ONLY_TITLE: 0x40,
 	PREFIX_CUT_MASK: 0x0f
 } as const;
@@ -28,6 +28,7 @@ function minimalContent(type: number, tag: number) {
 	const name = 0;
 	const labels = 0;
 	return [
+		type & 0xff, // PLACEHOLDER
 		type & 0xff,
 		suffixToCut & 0xff,
 		...cstr(""),

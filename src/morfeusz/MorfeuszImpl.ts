@@ -276,9 +276,12 @@ export class MorfeuszImpl {
 	private recognizePayload(word: string): InterpsGroupsReader | null {
 		if (!this.fsa) return null;
 		const s = this.fsa.getInitialState();
-		for (const ch of word) {
-			const cp = ch.codePointAt(0)!;
-			s.proceedToNext(this.fsa, cp & 0xff);
+		// Feed UTF-8 bytes — the Morfeusz FSA is indexed on raw UTF-8 byte sequences,
+		// not Unicode code points. Iterating over the string gives us codepoints, so
+		// we must encode each character to its UTF-8 bytes before walking the automaton.
+		const encoded = new TextEncoder().encode(word);
+		for (const byte of encoded) {
+			s.proceedToNext(this.fsa, byte);
 			if (s.isSink()) return null;
 		}
 		if (!s.isAccepting()) return null;

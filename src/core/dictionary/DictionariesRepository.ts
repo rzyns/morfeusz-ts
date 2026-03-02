@@ -10,7 +10,7 @@ export type DictionaryData = {
 };
 
 export class DictionariesRepository {
-	static dictionarySearchPaths: string[] = [".", "morfeusz2/dict"]; // default dev paths
+	static dictionarySearchPaths: string[] = [".", "morfeusz2/dict", "/usr/share/morfeusz2/dictionaries"]; // includes system install path
 
 	static getDictionaryFilename(
 		name: string,
