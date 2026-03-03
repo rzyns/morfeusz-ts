@@ -1,6 +1,6 @@
 {
 	"name": "@rzyns/morfeusz-ts",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "TypeScript port of Morfeusz 2 - Polish morphological analyzer",
 	"type": "module",
 	"scripts": {
