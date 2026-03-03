@@ -44,6 +44,7 @@ describe("InterpsGroupsDecoder (placeholder)", () => {
 		const reader = new InterpsGroupsReader();
 		reader.update(view, 2, totalGroupsLen);
 		const dec = new InterpsGroupsDecoder();
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const res = dec.decode("ala", reader, stubIds as any);
 		expect(res.length).toBeGreaterThan(0);
 		expect(typeof res[0].tagId).toBe("number");

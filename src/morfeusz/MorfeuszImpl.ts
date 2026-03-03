@@ -104,11 +104,13 @@ export class MorfeuszImpl {
 		while (cursor < text.length) {
 			const ch = text[cursor];
 			if (/\s/.test(ch)) {
+				// eslint-disable-next-line prefer-const
 				let start = cursor;
 				while (cursor < text.length && /\s/.test(text[cursor]))
 					cursor++;
 				pushWhitespace(text.slice(start, cursor));
 			} else {
+				// eslint-disable-next-line prefer-const
 				let start = cursor;
 				while (cursor < text.length && !/\s/.test(text[cursor]))
 					cursor++;

@@ -22,7 +22,7 @@ function buildHeaderWithSimpleFSA(): ArrayBuffer {
 	view.setUint8(IMPLEMENTATION_NUM_OFFSET, 0); // SimpleFSA
 	view.setUint32(FSA_DATA_SIZE_OFFSET, fsaSize, false);
 	// Write FSA bytes starting at FSA_DATA_OFFSET
-	let off = FSA_DATA_OFFSET;
+	let off = FSA_DATA_OFFSET; // eslint-disable-line prefer-const
 	view.setUint8(off + 0, 0x01); // 1 transition
 	view.setUint8(off + 1, "x".charCodeAt(0));
 	view.setUint8(off + 2, 0x00);
