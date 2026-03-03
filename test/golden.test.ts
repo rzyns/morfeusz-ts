@@ -96,11 +96,14 @@ describe("Golden master — MorfeuszImpl vs morfeusz_analyzer", () => {
 					// Word not in dict — ign-only result is expected
 					expect(nonIgn.length).toBe(0);
 				} else if (nonIgn.length === 0) {
-					// Known gap: the FSA stores some entries only under their lowercase form.
-					// The C++ lowercases the input before FSA walk; the TS port walks with
-					// the raw input, so it misses title-case-only entries (proper nouns, etc.).
-					// These will be fixed when lowercase-fallback FSA walk is implemented.
-					console.warn(`KNOWN GAP (lowercase FSA walk not implemented): "${fixture.word}" — skipping`);
+					// If fixture.results contains only ign-tagged results, TS returning ign is
+					// correct (word absent from dict). Otherwise it's a real gap.
+					const fixtureHasRealResults = fixture.results.some(r => r.tag !== "ign");
+					if (!fixtureHasRealResults) {
+						// Both C++ and TS return ign — correct behaviour, no gap
+						return;
+					}
+					console.warn(`KNOWN GAP: "${fixture.word}" — TS returns all-ign but C++ has real results`);
 				} else {
 					expect(
 						nonIgn.length,
@@ -115,9 +118,12 @@ describe("Golden master — MorfeuszImpl vs morfeusz_analyzer", () => {
 				const results  = m.analyseToArray(fixture.word);
 				const nonIgn   = results.filter(r => r.tagId !== 0);
 
-				// Skip lemma check for words the TS can't find (known lowercase-FSA gap)
+				// Skip lemma check if TS can't find the word (returns all-ign)
 				if (fixture.results.length > 0 && nonIgn.length === 0) {
-					console.warn(`KNOWN GAP (lowercase FSA walk not implemented): "${fixture.word}" — skipping lemma check`);
+					const fixtureHasRealResults = fixture.results.some(r => r.tag !== "ign");
+					if (fixtureHasRealResults) {
+						console.warn(`KNOWN GAP: "${fixture.word}" — skipping lemma check`);
+					}
 					return;
 				}
 
@@ -142,7 +148,7 @@ describe("Golden master — MorfeuszImpl vs morfeusz_analyzer", () => {
 				const results   = m.analyseToArray(fixture.word);
 				const nonIgn    = results.filter(r => r.tagId !== 0);
 
-				// Skip tagId check for words the TS can't find
+				// Skip tagId check if TS can't find the word
 				if (fixture.results.length > 0 && nonIgn.length === 0) return;
 
 				const tsTagIds  = new Set(results.map(r => r.tagId));

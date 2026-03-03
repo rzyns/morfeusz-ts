@@ -82,8 +82,12 @@ describe("conditional case preference and fallback", () => {
 			},
 			CaseHandling.CONDITIONALLY_CASE_SENSITIVE
 		);
-		expect(res.length).toBe(1);
-		expect(res[0].tagId).toBe(10);
+		// Both groups are in "matched": 0xa0 (ORTH_ONLY_LOWER) always matches
+		// (the flag means "stems are lowercase", not "input must be lowercase"),
+		// and 0x50 (ORTH_ONLY_TITLE) matches title-case "Word". Both tagIds present.
+		expect(res.length).toBe(2);
+		const tagIds = res.map((r) => r.tagId).sort((a, b) => a - b);
+		expect(tagIds).toEqual([10, 20]);
 	});
 
 	it("prefers lower-case when orth is 'word'", () => {
@@ -128,7 +132,7 @@ describe("conditional case preference and fallback", () => {
 		expect(res[0].tagId).toBe(20);
 	});
 
-	it("falls back to all when uppercase has no strict match", () => {
+	it("uppercase input: only ORTH_ONLY_LOWER group matches (ORTH_ONLY_TITLE excluded)", () => {
 		const titleType = CompressionFlags.ORTH_ONLY_TITLE;
 		const lowerType = CompressionFlags.ORTH_ONLY_LOWER;
 		const viewTitle = makeGroupBuffer(
@@ -166,8 +170,10 @@ describe("conditional case preference and fallback", () => {
 			},
 			CaseHandling.CONDITIONALLY_CASE_SENSITIVE
 		);
-		expect(res.length).toBe(2);
-		const tags = res.map((r) => r.tagId).sort();
-		expect(tags).toEqual([10, 20]);
+		// "WORD" is not title-case so 0x50 (ORTH_ONLY_TITLE, tagId=10) is excluded.
+		// 0xa0 (ORTH_ONLY_LOWER, tagId=20) always matches — it flags stem casing, not input.
+		// matched = [tagId=20]; CONDITIONALLY returns matched (no fallback needed).
+		expect(res.length).toBe(1);
+		expect(res[0].tagId).toBe(20);
 	});
 });

@@ -84,7 +84,7 @@ export class MorfeuszImpl {
 			if (!w) return;
 			const payload = this.recognizePayload(w);
 			if (payload) {
-				const interps = this.decodePayload(w, payload);
+				const interps = this.decodePayload(w, payload.reader, payload.orthForLemma);
 				for (const it of interps) {
 					items.push({
 						...it,
@@ -273,12 +273,14 @@ export class MorfeuszImpl {
 		return !!this.fsa;
 	}
 
-	private recognizePayload(word: string): InterpsGroupsReader | null {
+	/**
+	 * Walk the FSA with the given word's UTF-8 bytes.
+	 * Returns the InterpsGroupsReader at the accepting state, or null on miss.
+	 */
+	private walkFSA(word: string): InterpsGroupsReader | null {
 		if (!this.fsa) return null;
 		const s = this.fsa.getInitialState();
-		// Feed UTF-8 bytes — the Morfeusz FSA is indexed on raw UTF-8 byte sequences,
-		// not Unicode code points. Iterating over the string gives us codepoints, so
-		// we must encode each character to its UTF-8 bytes before walking the automaton.
+		// The FSA is indexed on raw UTF-8 byte sequences.
 		const encoded = new TextEncoder().encode(word);
 		for (const byte of encoded) {
 			s.proceedToNext(this.fsa, byte);
@@ -288,9 +290,39 @@ export class MorfeuszImpl {
 		return s.getValue();
 	}
 
+	/**
+	 * Try to find FSA payload for `word`.
+	 *
+	 * Strategy (mirrors the C++ implementation):
+	 *   1. Exact match — walk with original word bytes.
+	 *   2. Lowercase fallback — if no exact hit AND word !== word.toLowerCase(),
+	 *      walk with the lowercased form. In that case `orthForLemma` is the
+	 *      lowercase form so lemma stems are computed from it; case-pattern
+	 *      metadata in each interp then re-applies the correct casing.
+	 *
+	 * Returns { reader, orthForLemma } or null when the word is not in the FSA
+	 * at all (even after lowercasing).
+	 */
+	private recognizePayload(
+		word: string
+	): { reader: InterpsGroupsReader; orthForLemma: string } | null {
+		const exact = this.walkFSA(word);
+		if (exact) return { reader: exact, orthForLemma: word };
+
+		// Lowercase fallback (handles "KOT", "Warszawa", "BIEGAĆ" etc.)
+		const lower = word.toLowerCase();
+		if (lower === word) return null; // already lowercase — no fallback possible
+
+		const fallback = this.walkFSA(lower);
+		if (fallback) return { reader: fallback, orthForLemma: lower };
+
+		return null;
+	}
+
 	private decodePayload(
 		orth: string,
-		reader: InterpsGroupsReader
+		reader: InterpsGroupsReader,
+		orthForLemma: string = orth
 	): MorphInterpretation[] {
 		const decoder = new InterpsGroupsDecoder();
 		const ids = this.getIdResolver();
@@ -298,7 +330,8 @@ export class MorfeuszImpl {
 			orth,
 			reader,
 			ids,
-			this.options.caseHandling
+			this.options.caseHandling,
+			orthForLemma
 		);
 		if (res.length === 0) return [MI.createIgn(0, 0, orth, orth)];
 		return res;
