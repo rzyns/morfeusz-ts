@@ -75,7 +75,7 @@ jobs:
           GITHUB_REPO: ${{ github.repository }}
 
       - name: Pack npm tarball
-        run: pnpm pack --out-dir release-artifacts
+        run: pnpm pack --pack-destination release-artifacts
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
