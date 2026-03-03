@@ -79,6 +79,10 @@ export class DictIdResolver implements IdResolver {
 		}
 		return this._labelByStr.get(labelsStr) ?? -1;
 	}
+
+	getTagsCount(): number { return this.tagById.size; }
+	getNamesCount(): number { return this.nameById.size; }
+	getLabelsCount(): number { return this.labelById.size; }
 }
 
 /**

@@ -1,0 +1,77 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    name: Build & Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # create GitHub releases and push changelog commit
+      id-token: write   # OIDC / attestations
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history for changelog generation
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install system dependencies (Morfeusz2)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y morfeusz2 morfeusz2-dictionary-sgjp
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      - name: Test
+        run: pnpm run test
+
+      - name: Build
+        run: pnpm run build
+
+      # -----------------------------------------------------------------------
+      # Generate changelog (commits since last tag)
+      # -----------------------------------------------------------------------
+      - name: Generate changelog
+        id: changelog
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --latest --strip header
+        env:
+          OUTPUT: CHANGELOG_RELEASE.md
+          GITHUB_REPO: ${{ github.repository }}
+
+      # -----------------------------------------------------------------------
+      # Pack npm tarball
+      # -----------------------------------------------------------------------
+      - name: Pack npm tarball
+        run: pnpm pack --out-dir release-artifacts
+
+      # -----------------------------------------------------------------------
+      # Create GitHub release
+      # -----------------------------------------------------------------------
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: CHANGELOG_RELEASE.md
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: release-artifacts/*.tgz
