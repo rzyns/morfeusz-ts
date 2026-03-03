@@ -46,15 +46,22 @@ describe("lemma assembly", () => {
 			groupTypeByte,
 			suffixToCut,
 			...cstr(suffixToAdd),
-			(tag >>> 8) & 0xff, tag & 0xff,
+			(tag >>> 8) & 0xff,
+			tag & 0xff,
 			name,
-			(labels >>> 8) & 0xff, labels & 0xff
+			(labels >>> 8) & 0xff,
+			labels & 0xff
 		];
 		const view = makeGroupBuffer(groupTypeByte, content);
 		const reader = new InterpsGroupsReader();
 		reader.update(view, 0, view.byteLength);
 		const decoder = new InterpsGroupsDecoder();
-		const res = decoder.decode(orth, reader, MOCK_IDS, CaseHandling.IGNORE_CASE);
+		const res = decoder.decode(
+			orth,
+			reader,
+			MOCK_IDS,
+			CaseHandling.IGNORE_CASE
+		);
 		expect(res.length).toBeGreaterThan(0);
 		const first = res[0];
 		expect(first.lemma).toBe("abcing");
@@ -79,15 +86,22 @@ describe("lemma assembly", () => {
 			field0,
 			suffixToCut,
 			...cstr(suffixToAdd),
-			(tag >>> 8) & 0xff, tag & 0xff,
+			(tag >>> 8) & 0xff,
+			tag & 0xff,
 			name,
-			(labels >>> 8) & 0xff, labels & 0xff
+			(labels >>> 8) & 0xff,
+			labels & 0xff
 		];
 		const view = makeGroupBuffer(groupTypeByte, content);
 		const reader = new InterpsGroupsReader();
 		reader.update(view, 0, view.byteLength);
 		const decoder = new InterpsGroupsDecoder();
-		const res = decoder.decode(orth, reader, MOCK_IDS, CaseHandling.IGNORE_CASE);
+		const res = decoder.decode(
+			orth,
+			reader,
+			MOCK_IDS,
+			CaseHandling.IGNORE_CASE
+		);
 		expect(res.length).toBeGreaterThan(0);
 		const first = res[0];
 		expect(first.lemma).toBe("helloo");

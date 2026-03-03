@@ -29,9 +29,7 @@
 			"lemma": "dobry:Sm3",
 			"tag": "subst:sg:gen:m3",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"szkol."
-			],
+			"labels": ["szkol."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null

@@ -19,9 +19,7 @@
 			"lemma": "do:S",
 			"tag": "subst:sg.pl:nom.gen.dat.acc.inst.loc.voc:n:ncol",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"muz."
-			],
+			"labels": ["muz."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null

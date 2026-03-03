@@ -19,9 +19,7 @@
 			"lemma": "on:A",
 			"tag": "adj:sg:acc:n:pos",
 			"name": "_",
-			"labels": [
-				"daw."
-			],
+			"labels": ["daw."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null
@@ -31,9 +29,7 @@
 			"lemma": "on:A",
 			"tag": "adj:sg:nom.voc:n:pos",
 			"name": "_",
-			"labels": [
-				"daw."
-			],
+			"labels": ["daw."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null

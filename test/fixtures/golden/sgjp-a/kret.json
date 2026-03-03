@@ -9,9 +9,7 @@
 			"lemma": "kret:Sm1",
 			"tag": "subst:sg:nom:m1",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"pot."
-			],
+			"labels": ["pot."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null
@@ -31,10 +29,7 @@
 			"lemma": "kret:Sm3",
 			"tag": "subst:sg:nom.acc:m3",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"roln.",
-				"techn."
-			],
+			"labels": ["roln.", "techn."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null

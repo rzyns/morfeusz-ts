@@ -9,9 +9,7 @@
 			"lemma": "tysiąc:Sm2",
 			"tag": "subst:sg:nom:m2",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"karc."
-			],
+			"labels": ["karc."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null

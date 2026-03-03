@@ -10,13 +10,13 @@ import { Dictionary } from "../src/core/dictionary/Dictionary.js";
 
 const KNOWN: Array<{
 	word: string;
-	lemmas: string[];    // at least one must appear
-	tagPrefix: string;   // at least one result tag must start with this
+	lemmas: string[]; // at least one must appear
+	tagPrefix: string; // at least one result tag must start with this
 }> = [
-	{ word: "w",     lemmas: ["w"],     tagPrefix: "prep:" },
-	{ word: "kot",   lemmas: ["kot"],   tagPrefix: "subst:sg:nom:m" },
-	{ word: "psa",   lemmas: ["pies"],  tagPrefix: "subst:sg:gen" },
-	{ word: "żółw",  lemmas: ["żółw"], tagPrefix: "subst:sg:nom:m" },
+	{ word: "w", lemmas: ["w"], tagPrefix: "prep:" },
+	{ word: "kot", lemmas: ["kot"], tagPrefix: "subst:sg:nom:m" },
+	{ word: "psa", lemmas: ["pies"], tagPrefix: "subst:sg:gen" },
+	{ word: "żółw", lemmas: ["żółw"], tagPrefix: "subst:sg:nom:m" }
 ];
 
 describe("MorfeuszImpl + real dictionary", () => {
@@ -24,7 +24,8 @@ describe("MorfeuszImpl + real dictionary", () => {
 
 	beforeAll(async () => {
 		const found = await DictionariesRepository.tryToLoadDictionary(
-			"sgjp", MorfeuszProcessorType.ANALYZER,
+			"sgjp",
+			MorfeuszProcessorType.ANALYZER
 		);
 		if (!found) return;
 		m = new MorfeuszImpl("sgjp", MorfeuszUsage.ANALYSE_ONLY);
@@ -33,24 +34,39 @@ describe("MorfeuszImpl + real dictionary", () => {
 
 	it("dictionary is loadable and header is valid", async () => {
 		const found = await DictionariesRepository.tryToLoadDictionary(
-			"sgjp", MorfeuszProcessorType.ANALYZER,
+			"sgjp",
+			MorfeuszProcessorType.ANALYZER
 		);
-		if (!found) { console.log("SKIP: no dict"); return; }
+		if (!found) {
+			console.log("SKIP: no dict");
+			return;
+		}
 		const dict = new Dictionary(found.buffer);
 		expect([0, 1, 2]).toContain(dict.header.impl);
 	});
 
 	for (const { word, lemmas, tagPrefix } of KNOWN) {
 		it(`recognizes "${word}"`, () => {
-			if (!m) { console.log("SKIP: no dict"); return; }
+			if (!m) {
+				console.log("SKIP: no dict");
+				return;
+			}
 			const results = m.analyseToArray(word);
 			expect(results.length).toBeGreaterThan(0);
 
-			const nonIgn = results.filter(r => r.tagId !== 0);
-			expect(nonIgn.length, `all results were ign for "${word}"`).toBeGreaterThan(0);
+			const nonIgn = results.filter((r) => r.tagId !== 0);
+			expect(
+				nonIgn.length,
+				`all results were ign for "${word}"`
+			).toBeGreaterThan(0);
 
-			const hasLemma = lemmas.some(l => results.some(r => r.lemma.startsWith(l)));
-			expect(hasLemma, `expected lemma from [${lemmas}], got [${results.map(r => r.lemma)}]`).toBe(true);
+			const hasLemma = lemmas.some((l) =>
+				results.some((r) => r.lemma.startsWith(l))
+			);
+			expect(
+				hasLemma,
+				`expected lemma from [${lemmas}], got [${results.map((r) => r.lemma)}]`
+			).toBe(true);
 		});
 	}
 });

@@ -19,10 +19,7 @@
 			"lemma": "rok:Sm3~roki",
 			"tag": "subst:sg:nom.acc:m3",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"daw.",
-				"praw."
-			],
+			"labels": ["daw.", "praw."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null

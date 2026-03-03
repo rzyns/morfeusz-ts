@@ -1,88 +1,88 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - "v*"
+    push:
+        tags:
+            - "v*"
 
 jobs:
-  release:
-    name: Build & Release
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      id-token: write
+    release:
+        name: Build & Release
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            id-token: write
 
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
-        with:
-          run_install: false
+            - uses: pnpm/action-setup@v4
+              with:
+                  run_install: false
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: pnpm
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
 
-      - name: Resolve latest SGJP dict version
-        id: dict-version
-        run: |
-          LATEST=$(curl -fsSL https://download.sgjp.pl/morfeusz/ \
-            | grep -o 'href="[0-9]\{8\}/"' \
-            | sed 's/href="//; s/\/"//' \
-            | sort -r | head -1)
-          echo "version=${LATEST}" >> "$GITHUB_OUTPUT"
+            - name: Resolve latest SGJP dict version
+              id: dict-version
+              run: |
+                  LATEST=$(curl -fsSL https://download.sgjp.pl/morfeusz/ \
+                    | grep -o 'href="[0-9]\{8\}/"' \
+                    | sed 's/href="//; s/\/"//' \
+                    | sort -r | head -1)
+                  echo "version=${LATEST}" >> "$GITHUB_OUTPUT"
 
-      - name: Cache SGJP dictionary
-        id: dict-cache
-        uses: actions/cache@v4
-        with:
-          path: morfeusz2/dict
-          key: sgjp-dict-${{ steps.dict-version.outputs.version }}
+            - name: Cache SGJP dictionary
+              id: dict-cache
+              uses: actions/cache@v4
+              with:
+                  path: morfeusz2/dict
+                  key: sgjp-dict-${{ steps.dict-version.outputs.version }}
 
-      - name: Download SGJP dictionary
-        if: steps.dict-cache.outputs.cache-hit != 'true'
-        run: |
-          VERSION=${{ steps.dict-version.outputs.version }}
-          mkdir -p morfeusz2/dict
-          curl -fsSL \
-            "https://download.sgjp.pl/morfeusz/${VERSION}/morfeusz2-dictionary-sgjp-${VERSION}.tgz" \
-            | tar xzf - -C morfeusz2/dict sgjp-a.dict sgjp-s.dict
+            - name: Download SGJP dictionary
+              if: steps.dict-cache.outputs.cache-hit != 'true'
+              run: |
+                  VERSION=${{ steps.dict-version.outputs.version }}
+                  mkdir -p morfeusz2/dict
+                  curl -fsSL \
+                    "https://download.sgjp.pl/morfeusz/${VERSION}/morfeusz2-dictionary-sgjp-${VERSION}.tgz" \
+                    | tar xzf - -C morfeusz2/dict sgjp-a.dict sgjp-s.dict
 
-      - name: Typecheck
-        run: pnpm run typecheck
+            - name: Typecheck
+              run: pnpm run typecheck
 
-      - name: Test
-        run: pnpm run test
+            - name: Test
+              run: pnpm run test
 
-      - name: Build
-        run: pnpm run build
+            - name: Build
+              run: pnpm run build
 
-      - name: Generate changelog
-        id: changelog
-        uses: orhun/git-cliff-action@v4
-        with:
-          config: cliff.toml
-          args: --latest --strip header
-        env:
-          OUTPUT: CHANGELOG_RELEASE.md
-          GITHUB_REPO: ${{ github.repository }}
+            - name: Generate changelog
+              id: changelog
+              uses: orhun/git-cliff-action@v4
+              with:
+                  config: cliff.toml
+                  args: --latest --strip header
+              env:
+                  OUTPUT: CHANGELOG_RELEASE.md
+                  GITHUB_REPO: ${{ github.repository }}
 
-      - name: Pack npm tarball
-        run: pnpm pack --pack-destination release-artifacts
+            - name: Pack npm tarball
+              run: pnpm pack --pack-destination release-artifacts
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          body_path: CHANGELOG_RELEASE.md
-          tag_name: ${{ github.ref_name }}
-          name: ${{ github.ref_name }}
-          draft: false
-          prerelease: ${{ contains(github.ref_name, '-') }}
-          files: release-artifacts/*.tgz
+            - name: Create GitHub Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  body_path: CHANGELOG_RELEASE.md
+                  tag_name: ${{ github.ref_name }}
+                  name: ${{ github.ref_name }}
+                  draft: false
+                  prerelease: ${{ contains(github.ref_name, '-') }}
+                  files: release-artifacts/*.tgz

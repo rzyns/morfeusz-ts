@@ -22,8 +22,8 @@ export class DictIdResolver implements IdResolver {
 	private _labelByStr: Map<string, number> | null = null;
 
 	constructor(private readonly epilogue: DictEpilogue) {
-		this.tagById   = epilogue.tags;
-		this.nameById  = epilogue.names;
+		this.tagById = epilogue.tags;
+		this.nameById = epilogue.names;
 		this.labelById = epilogue.labels;
 	}
 
@@ -41,7 +41,10 @@ export class DictIdResolver implements IdResolver {
 			// The simplest correct inverse: N = storedId - 1 (may collide at gaps, but
 			// we only need one canonical value per string for encoding purposes).
 			this._tagByStr = new Map(
-				[...this.tagById.entries()].map(([storedId, t]) => [t, storedId - 1])
+				[...this.tagById.entries()].map(([storedId, t]) => [
+					t,
+					storedId - 1
+				])
 			);
 		}
 		return this._tagByStr.get(tag) ?? -1;
@@ -54,7 +57,10 @@ export class DictIdResolver implements IdResolver {
 	getNameId(name: string): number {
 		if (!this._nameByStr) {
 			this._nameByStr = new Map(
-				[...this.nameById.entries()].map(([storedId, n]) => [n, storedId - 1])
+				[...this.nameById.entries()].map(([storedId, n]) => [
+					n,
+					storedId - 1
+				])
 			);
 		}
 		return this._nameByStr.get(name) ?? -1;
@@ -68,21 +74,35 @@ export class DictIdResolver implements IdResolver {
 	getLabels(labelsId: number): Set<string> {
 		const s = this.getLabelsAsString(labelsId);
 		if (!s) return new Set();
-		return new Set(s.split(",").map((l) => l.trim()).filter(Boolean));
+		return new Set(
+			s
+				.split(",")
+				.map((l) => l.trim())
+				.filter(Boolean)
+		);
 	}
 
 	getLabelsId(labelsStr: string): number {
 		if (!this._labelByStr) {
 			this._labelByStr = new Map(
-				[...this.labelById.entries()].map(([storedId, l]) => [l, storedId - 1])
+				[...this.labelById.entries()].map(([storedId, l]) => [
+					l,
+					storedId - 1
+				])
 			);
 		}
 		return this._labelByStr.get(labelsStr) ?? -1;
 	}
 
-	getTagsCount(): number { return this.tagById.size; }
-	getNamesCount(): number { return this.nameById.size; }
-	getLabelsCount(): number { return this.labelById.size; }
+	getTagsCount(): number {
+		return this.tagById.size;
+	}
+	getNamesCount(): number {
+		return this.nameById.size;
+	}
+	getLabelsCount(): number {
+		return this.labelById.size;
+	}
 }
 
 /**

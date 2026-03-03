@@ -22,7 +22,8 @@ function readCasePattern(
 	const b = dv.getUint8(ptr);
 	if (b === 0x00) return { stemCase: "lower", next: ptr + 1 };
 	if (b === 0x01) return { stemCase: "title", next: ptr + 2 };
-	if (b === 0x02) return { stemCase: "none", next: ptr + 2 + dv.getUint8(ptr + 1) };
+	if (b === 0x02)
+		return { stemCase: "none", next: ptr + 2 + dv.getUint8(ptr + 1) };
 	return { stemCase: "none", next: ptr + 1 };
 }
 
@@ -111,8 +112,11 @@ export class InterpsGroupsDecoder {
 
 			// Group-level stem-case transform (applies when hasOrthCase=false).
 			const groupStemCase: StemCase =
-				(groupTypeByte & 0xc0) === 0x80 ? "lower" :
-				(groupTypeByte & 0xc0) === 0x40 ? "title" : "none";
+				(groupTypeByte & 0xc0) === 0x80
+					? "lower"
+					: (groupTypeByte & 0xc0) === 0x40
+						? "title"
+						: "none";
 
 			// Whether per-interp lemma case pattern bytes exist in stream.
 			const hasLemmaCase = !takes547d0 && (groupTypeByte & 0x30) === 0;
@@ -148,7 +152,10 @@ export class InterpsGroupsDecoder {
 
 				// 4. NUL-terminated suffixToAdd
 				if (ptr >= end) break;
-				const { value: suffixToAdd, next: afterSuffix } = readCString(dv, ptr);
+				const { value: suffixToAdd, next: afterSuffix } = readCString(
+					dv,
+					ptr
+				);
 				ptr = afterSuffix;
 
 				// 5. Lemma case pattern (skip — we don't use it yet)
@@ -159,18 +166,24 @@ export class InterpsGroupsDecoder {
 
 				// 6. tagId[2 BE] + nameId[1] + labelsId[2 BE]
 				if (ptr + 5 > end) break;
-				const tagId    = dv.getUint16(ptr, false); ptr += 2;
-				const nameId   = dv.getUint8(ptr);         ptr++;
-				const labelsId = dv.getUint16(ptr, false); ptr += 2;
+				const tagId = dv.getUint16(ptr, false);
+				ptr += 2;
+				const nameId = dv.getUint8(ptr);
+				ptr++;
+				const labelsId = dv.getUint16(ptr, false);
+				ptr += 2;
 
 				// 7. Lemma construction:
 				//    raw stem = orthForLemma[field0 .. length - suffixToCut]
 				//    apply stemCase transform to raw stem
 				//    lemma = casedStem + suffixToAdd
 				const prefixToCut = field0;
-				const stemEnd = Math.max(prefixToCut, orthForLemma.length - suffixToCut);
+				const stemEnd = Math.max(
+					prefixToCut,
+					orthForLemma.length - suffixToCut
+				);
 				const rawStem = orthForLemma.slice(prefixToCut, stemEnd);
-				const lemma   = applyCase(rawStem, stemCase) + suffixToAdd;
+				const lemma = applyCase(rawStem, stemCase) + suffixToAdd;
 
 				groupInterps.push({
 					startNode: 0,
@@ -202,18 +215,20 @@ export class InterpsGroupsDecoder {
 						: all;
 
 		if (results.length === 0) {
-			return [{
-				startNode: 0,
-				endNode: 0,
-				orth,
-				lemma: orth,
-				tagId: 0,
-				tag: "ign",
-				nameId: 0,
-				name: "",
-				labelsId: 0,
-				labels: ""
-			}];
+			return [
+				{
+					startNode: 0,
+					endNode: 0,
+					orth,
+					lemma: orth,
+					tagId: 0,
+					tag: "ign",
+					nameId: 0,
+					name: "",
+					labelsId: 0,
+					labels: ""
+				}
+			];
 		}
 		return results;
 	}

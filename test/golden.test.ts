@@ -45,13 +45,15 @@ interface GoldenFixture {
 // ---------------------------------------------------------------------------
 const FIXTURES_DIR = join(
 	fileURLToPath(new URL(".", import.meta.url)),
-	"fixtures", "golden", "sgjp-a",
+	"fixtures",
+	"golden",
+	"sgjp-a"
 );
 
 const fixtureFiles: string[] = existsSync(FIXTURES_DIR)
 	? readdirSync(FIXTURES_DIR)
-		.filter(f => f.endsWith(".json"))
-		.sort()
+			.filter((f) => f.endsWith(".json"))
+			.sort()
 	: [];
 
 // ---------------------------------------------------------------------------
@@ -74,23 +76,26 @@ describe("Golden master — MorfeuszImpl vs morfeusz_analyzer", () => {
 			m = new MorfeuszImpl("sgjp", MorfeuszUsage.ANALYSE_ONLY);
 			await m.load();
 		} catch (e) {
-			console.warn("Could not load dict:", (e as Error).message, "— golden tests will be skipped");
+			console.warn(
+				"Could not load dict:",
+				(e as Error).message,
+				"— golden tests will be skipped"
+			);
 			m = null;
 		}
 	});
 
 	for (const file of fixtureFiles) {
 		const fixture: GoldenFixture = JSON.parse(
-			readFileSync(join(FIXTURES_DIR, file), "utf-8"),
+			readFileSync(join(FIXTURES_DIR, file), "utf-8")
 		);
 
 		describe(`"${fixture.word}"`, () => {
-
 			it("produces at least one non-ign result when word is in dict", () => {
 				if (!m) return;
 
 				const results = m.analyseToArray(fixture.word);
-				const nonIgn  = results.filter(r => r.tagId !== 0);
+				const nonIgn = results.filter((r) => r.tagId !== 0);
 
 				if (fixture.results.length === 0) {
 					// Word not in dict — ign-only result is expected
@@ -98,16 +103,20 @@ describe("Golden master — MorfeuszImpl vs morfeusz_analyzer", () => {
 				} else if (nonIgn.length === 0) {
 					// If fixture.results contains only ign-tagged results, TS returning ign is
 					// correct (word absent from dict). Otherwise it's a real gap.
-					const fixtureHasRealResults = fixture.results.some(r => r.tag !== "ign");
+					const fixtureHasRealResults = fixture.results.some(
+						(r) => r.tag !== "ign"
+					);
 					if (!fixtureHasRealResults) {
 						// Both C++ and TS return ign — correct behaviour, no gap
 						return;
 					}
-					console.warn(`KNOWN GAP: "${fixture.word}" — TS returns all-ign but C++ has real results`);
+					console.warn(
+						`KNOWN GAP: "${fixture.word}" — TS returns all-ign but C++ has real results`
+					);
 				} else {
 					expect(
 						nonIgn.length,
-						`"${fixture.word}" has ${results.length} result(s) but all are ign`,
+						`"${fixture.word}" has ${results.length} result(s) but all are ign`
 					).toBeGreaterThan(0);
 				}
 			});
@@ -115,53 +124,61 @@ describe("Golden master — MorfeuszImpl vs morfeusz_analyzer", () => {
 			it("TS output contains every lemma the C++ returns", () => {
 				if (!m) return;
 
-				const results  = m.analyseToArray(fixture.word);
-				const nonIgn   = results.filter(r => r.tagId !== 0);
+				const results = m.analyseToArray(fixture.word);
+				const nonIgn = results.filter((r) => r.tagId !== 0);
 
 				// Skip lemma check if TS can't find the word (returns all-ign)
 				if (fixture.results.length > 0 && nonIgn.length === 0) {
-					const fixtureHasRealResults = fixture.results.some(r => r.tag !== "ign");
+					const fixtureHasRealResults = fixture.results.some(
+						(r) => r.tag !== "ign"
+					);
 					if (fixtureHasRealResults) {
-						console.warn(`KNOWN GAP: "${fixture.word}" — skipping lemma check`);
+						console.warn(
+							`KNOWN GAP: "${fixture.word}" — skipping lemma check`
+						);
 					}
 					return;
 				}
 
-				const tsLemmas = new Set(results.map(r => r.lemma));
+				const tsLemmas = new Set(results.map((r) => r.lemma));
 
 				for (const expected of fixture.results) {
 					expect(
 						tsLemmas.has(expected.lemma),
 						`"${fixture.word}": missing lemma "${expected.lemma}" (tag: ${expected.tag})\n` +
-						`  TS returned: ${[...tsLemmas].join(", ")}`,
+							`  TS returned: ${[...tsLemmas].join(", ")}`
 					).toBe(true);
 				}
 			});
 
 			// tagId assertions are skipped until IdResolver is implemented and
 			// fixtures are regenerated with numeric ids filled in.
-			const hasTagIds = fixture.results.some(r => r.tagId !== null);
+			const hasTagIds = fixture.results.some((r) => r.tagId !== null);
 
-			it.skipIf(!hasTagIds)("TS output contains every tagId the C++ returns", () => {
-				if (!m) return;
+			it.skipIf(!hasTagIds)(
+				"TS output contains every tagId the C++ returns",
+				() => {
+					if (!m) return;
 
-				const results   = m.analyseToArray(fixture.word);
-				const nonIgn    = results.filter(r => r.tagId !== 0);
+					const results = m.analyseToArray(fixture.word);
+					const nonIgn = results.filter((r) => r.tagId !== 0);
 
-				// Skip tagId check if TS can't find the word
-				if (fixture.results.length > 0 && nonIgn.length === 0) return;
+					// Skip tagId check if TS can't find the word
+					if (fixture.results.length > 0 && nonIgn.length === 0)
+						return;
 
-				const tsTagIds  = new Set(results.map(r => r.tagId));
+					const tsTagIds = new Set(results.map((r) => r.tagId));
 
-				for (const expected of fixture.results) {
-					if (expected.tagId === null) continue;
-					expect(
-						tsTagIds.has(expected.tagId),
-						`"${fixture.word}": missing tagId ${expected.tagId} (${expected.tag})\n` +
-						`  TS returned tagIds: ${[...tsTagIds].join(", ")}`,
-					).toBe(true);
+					for (const expected of fixture.results) {
+						if (expected.tagId === null) continue;
+						expect(
+							tsTagIds.has(expected.tagId),
+							`"${fixture.word}": missing tagId ${expected.tagId} (${expected.tag})\n` +
+								`  TS returned tagIds: ${[...tsTagIds].join(", ")}`
+						).toBe(true);
+					}
 				}
-			});
+			);
 		});
 	}
 });

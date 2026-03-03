@@ -34,7 +34,7 @@ function makeMinimalContent(type: number, tag: number) {
 	// preLoopByte at content[1] only present when groupTypeByte=0x00 (bit7 and bit6 both clear)
 	const hasPreLoopByte = (type & 0xc0) === 0;
 	return [
-		type & 0xff,   // groupTypeByte (content[0])
+		type & 0xff, // groupTypeByte (content[0])
 		...(hasPreLoopByte ? [0x00] : []), // preLoopByte — only for 0x00-type groups
 		// interp data starts here:
 		suffixToCut & 0xff,

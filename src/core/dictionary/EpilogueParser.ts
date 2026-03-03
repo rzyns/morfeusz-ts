@@ -55,12 +55,17 @@ export function parseEpilogue(
 	dv: DataView,
 	epilogueOffset: number
 ): DictEpilogue {
-
 	// Guard: if epilogue extends past the buffer (synthetic test dicts have no epilogue),
 	// return empty tables.
 	if (epilogueOffset + 8 > dv.byteLength) {
-		return { tagsetId: "", copyright: "", segmentorId: "",
-		         tags: new Map(), names: new Map(), labels: new Map() };
+		return {
+			tagsetId: "",
+			copyright: "",
+			segmentorId: "",
+			tags: new Map(),
+			names: new Map(),
+			labels: new Map()
+		};
 	}
 	let ptr = epilogueOffset + 4; // skip mystery prefix
 

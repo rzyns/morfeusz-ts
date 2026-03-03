@@ -19,9 +19,7 @@
 			"lemma": "mor",
 			"tag": "subst:sg:loc:m3",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"daw."
-			],
+			"labels": ["daw."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null
@@ -31,9 +29,7 @@
 			"lemma": "mor",
 			"tag": "subst:sg:voc:m3",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"daw."
-			],
+			"labels": ["daw."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null

@@ -9,9 +9,7 @@
 			"lemma": "pies:Sm1",
 			"tag": "subst:sg:gen.acc:m1",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"pot."
-			],
+			"labels": ["pot."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null

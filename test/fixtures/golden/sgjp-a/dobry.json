@@ -29,9 +29,7 @@
 			"lemma": "dobry:Sm3",
 			"tag": "subst:sg:nom.acc:m3",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"szkol."
-			],
+			"labels": ["szkol."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null
@@ -41,9 +39,7 @@
 			"lemma": "dobry:Sm3",
 			"tag": "subst:sg:voc:m3",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"szkol."
-			],
+			"labels": ["szkol."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null

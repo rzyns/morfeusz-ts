@@ -9,9 +9,7 @@
 			"lemma": "żółw:Sm1",
 			"tag": "subst:sg:nom:m1",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"przen."
-			],
+			"labels": ["przen."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null
@@ -21,9 +19,7 @@
 			"lemma": "żółw:Sm2",
 			"tag": "subst:sg:nom:m2",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"zool."
-			],
+			"labels": ["zool."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null

@@ -9,10 +9,7 @@
 			"lemma": "kot:Sm1",
 			"tag": "subst:pl:gen.acc:m1",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"pot.",
-				"środ."
-			],
+			"labels": ["pot.", "środ."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null

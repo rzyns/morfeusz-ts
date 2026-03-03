@@ -1,64 +1,64 @@
 name: CI
 
 on:
-  push:
-    branches: [development]
-  pull_request:
-    branches: [development]
+    push:
+        branches: [development]
+    pull_request:
+        branches: [development]
 
 jobs:
-  test:
-    name: Typecheck, Lint & Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    test:
+        name: Typecheck, Lint & Test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          run_install: false
+            - uses: pnpm/action-setup@v4
+              with:
+                  run_install: false
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: pnpm
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
 
-      # -----------------------------------------------------------------------
-      # Download SGJP dictionary (pre-compiled .dict files, no apt required)
-      # Cached by release date — updates automatically when a new version drops.
-      # -----------------------------------------------------------------------
-      - name: Resolve latest SGJP dict version
-        id: dict-version
-        run: |
-          LATEST=$(curl -fsSL https://download.sgjp.pl/morfeusz/ \
-            | grep -o 'href="[0-9]\{8\}/"' \
-            | sed 's/href="//; s/\/"//' \
-            | sort -r | head -1)
-          echo "version=${LATEST}" >> "$GITHUB_OUTPUT"
+            # -----------------------------------------------------------------------
+            # Download SGJP dictionary (pre-compiled .dict files, no apt required)
+            # Cached by release date — updates automatically when a new version drops.
+            # -----------------------------------------------------------------------
+            - name: Resolve latest SGJP dict version
+              id: dict-version
+              run: |
+                  LATEST=$(curl -fsSL https://download.sgjp.pl/morfeusz/ \
+                    | grep -o 'href="[0-9]\{8\}/"' \
+                    | sed 's/href="//; s/\/"//' \
+                    | sort -r | head -1)
+                  echo "version=${LATEST}" >> "$GITHUB_OUTPUT"
 
-      - name: Cache SGJP dictionary
-        id: dict-cache
-        uses: actions/cache@v4
-        with:
-          path: morfeusz2/dict
-          key: sgjp-dict-${{ steps.dict-version.outputs.version }}
+            - name: Cache SGJP dictionary
+              id: dict-cache
+              uses: actions/cache@v4
+              with:
+                  path: morfeusz2/dict
+                  key: sgjp-dict-${{ steps.dict-version.outputs.version }}
 
-      - name: Download SGJP dictionary
-        if: steps.dict-cache.outputs.cache-hit != 'true'
-        run: |
-          VERSION=${{ steps.dict-version.outputs.version }}
-          mkdir -p morfeusz2/dict
-          curl -fsSL \
-            "https://download.sgjp.pl/morfeusz/${VERSION}/morfeusz2-dictionary-sgjp-${VERSION}.tgz" \
-            | tar xzf - -C morfeusz2/dict sgjp-a.dict sgjp-s.dict
+            - name: Download SGJP dictionary
+              if: steps.dict-cache.outputs.cache-hit != 'true'
+              run: |
+                  VERSION=${{ steps.dict-version.outputs.version }}
+                  mkdir -p morfeusz2/dict
+                  curl -fsSL \
+                    "https://download.sgjp.pl/morfeusz/${VERSION}/morfeusz2-dictionary-sgjp-${VERSION}.tgz" \
+                    | tar xzf - -C morfeusz2/dict sgjp-a.dict sgjp-s.dict
 
-      - name: Typecheck
-        run: pnpm run typecheck
+            - name: Typecheck
+              run: pnpm run typecheck
 
-      - name: Lint
-        run: pnpm run lint
+            - name: Lint
+              run: pnpm run lint
 
-      - name: Test
-        run: pnpm run test
+            - name: Test
+              run: pnpm run test

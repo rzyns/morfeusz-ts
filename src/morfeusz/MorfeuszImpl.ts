@@ -86,7 +86,11 @@ export class MorfeuszImpl {
 			if (!w) return;
 			const payload = this.recognizePayload(w);
 			if (payload) {
-				const interps = this.decodePayload(w, payload.reader, payload.orthForLemma);
+				const interps = this.decodePayload(
+					w,
+					payload.reader,
+					payload.orthForLemma
+				);
 				for (const it of interps) {
 					items.push({
 						...it,
@@ -128,7 +132,11 @@ export class MorfeuszImpl {
 		// The payload format is different: each interp encodes the generated orth + tag.
 		const payload = this.recognizePayload(lemma);
 		if (!payload) return [MI.createIgn(0, 1, lemma, lemma)];
-		return decodeGeneratorPayload(payload.orthForLemma, payload.reader, this.getIdResolver());
+		return decodeGeneratorPayload(
+			payload.orthForLemma,
+			payload.reader,
+			this.getIdResolver()
+		);
 	}
 
 	generateWithTag(lemma: string, tagId: number): MorphInterpretation[] {

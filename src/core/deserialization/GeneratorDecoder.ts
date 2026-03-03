@@ -51,9 +51,12 @@ export function decodeGeneratorPayload(
 
 			// 4. tagId (2 bytes BE), nameId (1 byte), labelsId (2 bytes BE)
 			if (ptr + 5 > end) break;
-			const tagId    = dv.getUint16(ptr, false); ptr += 2;
-			const nameId   = dv.getUint8(ptr);         ptr++;
-			const labelsId = dv.getUint16(ptr, false); ptr += 2;
+			const tagId = dv.getUint16(ptr, false);
+			ptr += 2;
+			const nameId = dv.getUint8(ptr);
+			ptr++;
+			const labelsId = dv.getUint16(ptr, false);
+			ptr += 2;
 
 			// Construct orth from lemmaKey
 			const stemEnd = Math.max(0, lemmaKey.length - orthSuffixToCut);
@@ -78,18 +81,20 @@ export function decodeGeneratorPayload(
 	}
 
 	if (results.length === 0) {
-		return [{
-			startNode: 0,
-			endNode: 0,
-			orth: lemmaKey,
-			lemma: lemmaKey,
-			tagId: 0,
-			tag: "ign",
-			nameId: 0,
-			name: "",
-			labelsId: 0,
-			labels: ""
-		}];
+		return [
+			{
+				startNode: 0,
+				endNode: 0,
+				orth: lemmaKey,
+				lemma: lemmaKey,
+				tagId: 0,
+				tag: "ign",
+				nameId: 0,
+				name: "",
+				labelsId: 0,
+				labels: ""
+			}
+		];
 	}
 	return results;
 }

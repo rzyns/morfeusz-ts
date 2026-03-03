@@ -3,16 +3,33 @@
 	"_note": "semantic-release is kept as a dev dependency but release is driven by bumpp + tag push. This config is retained for reference only.",
 	"branches": ["main"],
 	"plugins": [
-		["@semantic-release/commit-analyzer", { "preset": "conventionalcommits" }],
-		["@semantic-release/release-notes-generator", { "preset": "conventionalcommits" }],
+		[
+			"@semantic-release/commit-analyzer",
+			{ "preset": "conventionalcommits" }
+		],
+		[
+			"@semantic-release/release-notes-generator",
+			{ "preset": "conventionalcommits" }
+		],
 		["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
 		["@semantic-release/npm", { "npmPublish": false }],
-		["@semantic-release/github", {
-			"assets": [{ "path": "release-artifacts/*.tgz", "label": "npm tarball" }]
-		}],
-		["@semantic-release/git", {
-			"assets": ["CHANGELOG.md", "package.json"],
-			"message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-		}]
+		[
+			"@semantic-release/github",
+			{
+				"assets": [
+					{
+						"path": "release-artifacts/*.tgz",
+						"label": "npm tarball"
+					}
+				]
+			}
+		],
+		[
+			"@semantic-release/git",
+			{
+				"assets": ["CHANGELOG.md", "package.json"],
+				"message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+			}
+		]
 	]
 }

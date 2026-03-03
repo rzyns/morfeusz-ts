@@ -29,9 +29,7 @@
 			"lemma": "jeden:S",
 			"tag": "subst:sg:nom:m2",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"pot."
-			],
+			"labels": ["pot."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null
@@ -41,9 +39,7 @@
 			"lemma": "jeden:S",
 			"tag": "subst:sg:voc:m2",
 			"name": "nazwa_pospolita",
-			"labels": [
-				"pot."
-			],
+			"labels": ["pot."],
 			"tagId": null,
 			"nameId": null,
 			"labelsId": null

@@ -14,8 +14,8 @@ export class CaseConverter {
 		const seg =
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			typeof Intl !== "undefined" && (Intl as any).Segmenter
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				? new (Intl as any).Segmenter("pl-PL", {
+				? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+					new (Intl as any).Segmenter("pl-PL", {
 						granularity: "grapheme"
 					})
 				: null;

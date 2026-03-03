@@ -27,57 +27,133 @@ import { fileURLToPath } from "node:url";
 // ---------------------------------------------------------------------------
 const WORD_LIST: string[] = [
 	// Nouns: masculine animate m1
-	"kot", "pies", "mężczyzna", "chłopiec", "student",
+	"kot",
+	"pies",
+	"mężczyzna",
+	"chłopiec",
+	"student",
 	// Nouns: masculine animate m2 (small animals)
-	"kret", "szczur",
+	"kret",
+	"szczur",
 	// Nouns: masculine inanimate m3
-	"stół", "dom", "samochód", "rok",
+	"stół",
+	"dom",
+	"samochód",
+	"rok",
 	// Nouns: feminine
-	"kobieta", "matka", "córka", "rzeka", "noc",
+	"kobieta",
+	"matka",
+	"córka",
+	"rzeka",
+	"noc",
 	// Nouns: neuter
-	"okno", "miasto", "dziecko", "morze",
+	"okno",
+	"miasto",
+	"dziecko",
+	"morze",
 	// Adjectives
-	"dobry", "duży", "stary", "nowy", "czerwony",
+	"dobry",
+	"duży",
+	"stary",
+	"nowy",
+	"czerwony",
 	// Verbs: imperfective
-	"robić", "czytać", "pisać", "mówić",
+	"robić",
+	"czytać",
+	"pisać",
+	"mówić",
 	// Verbs: perfective
-	"zrobić", "napisać", "powiedzieć",
+	"zrobić",
+	"napisać",
+	"powiedzieć",
 	// Verbs: irregular
-	"być", "mieć", "iść", "wiedzieć",
+	"być",
+	"mieć",
+	"iść",
+	"wiedzieć",
 	// Prepositions
-	"w", "z", "na", "po", "do", "od", "przy", "przed", "przez", "za",
+	"w",
+	"z",
+	"na",
+	"po",
+	"do",
+	"od",
+	"przy",
+	"przed",
+	"przez",
+	"za",
 	// Conjunctions/particles
-	"i", "ale", "że", "bo", "lub", "oraz",
+	"i",
+	"ale",
+	"że",
+	"bo",
+	"lub",
+	"oraz",
 	// Pronouns
-	"ja", "ty", "on", "ona", "ono", "my", "wy", "się",
+	"ja",
+	"ty",
+	"on",
+	"ona",
+	"ono",
+	"my",
+	"wy",
+	"się",
 	// Adverbs
-	"dobrze", "szybko", "bardzo", "już", "też",
+	"dobrze",
+	"szybko",
+	"bardzo",
+	"już",
+	"też",
 	// Numerals
-	"jeden", "dwa", "trzy", "pięć", "sto", "tysiąc",
+	"jeden",
+	"dwa",
+	"trzy",
+	"pięć",
+	"sto",
+	"tysiąc",
 
 	// Inflected forms (tests suffix-cut path, not headwords)
-	"psa", "psu",
-	"kota", "kotów",
-	"kobiety", "kobiecie",
+	"psa",
+	"psu",
+	"kota",
+	"kotów",
+	"kobiety",
+	"kobiecie",
 	"okna",
-	"dobrego", "dobremu",
-	"czyta", "pisał",
+	"dobrego",
+	"dobremu",
+	"czyta",
+	"pisał",
 	"idę",
-	"jest", "ma",
+	"jest",
+	"ma",
 
 	// Diacritics
-	"żółw", "źródło", "ścieżka", "łódź", "środa",
+	"żółw",
+	"źródło",
+	"ścieżka",
+	"łódź",
+	"środa",
 
 	// Case variants
-	"Kot", "KOT",
-	"Warszawa", "warszawa", "WARSZAWA",
-	"Kraków", "Anna", "Jan", "Polska",
+	"Kot",
+	"KOT",
+	"Warszawa",
+	"warszawa",
+	"WARSZAWA",
+	"Kraków",
+	"Anna",
+	"Jan",
+	"Polska",
 
 	// Absent from dictionary
-	"qwerty", "xyzzy", "aaabbb",
+	"qwerty",
+	"xyzzy",
+	"aaabbb",
 
 	// Long / morphologically complex
-	"przeczytałbym", "nieprzyzwyczajony",
+	"przeczytałbym",
+	"nieprzyzwyczajony"
 ];
 
 // ---------------------------------------------------------------------------
@@ -106,16 +182,21 @@ interface GoldenFixture {
 // Run morfeusz_analyzer for a single word
 // stdout = analysis results  stderr = header/version lines
 // ---------------------------------------------------------------------------
-function analyze(word: string, dictArg: string): { stdout: string; stderr: string } {
-	const result = spawnSync(
-		"morfeusz_analyzer",
-		["--dict", dictArg],
-		{ input: word + "\n", encoding: "utf-8", timeout: 5000 },
-	);
+function analyze(
+	word: string,
+	dictArg: string
+): { stdout: string; stderr: string } {
+	const result = spawnSync("morfeusz_analyzer", ["--dict", dictArg], {
+		input: word + "\n",
+		encoding: "utf-8",
+		timeout: 5000
+	});
 	if (result.error) throw result.error;
 	if (result.status !== 0 && !result.stdout) {
 		const msg = result.stderr ?? "(no stderr)";
-		throw new Error("morfeusz_analyzer exited " + String(result.status) + ": " + msg);
+		throw new Error(
+			"morfeusz_analyzer exited " + String(result.status) + ": " + msg
+		);
 	}
 	return { stdout: result.stdout ?? "", stderr: result.stderr ?? "" };
 }
@@ -129,7 +210,10 @@ function detectVersion(dictArg: string): string {
 		const m = stderr.match(/Morfeusz analyzer, version: ([\d.]+)/);
 		return m ? "morfeusz_analyzer " + m[1] : "morfeusz_analyzer (unknown)";
 	} catch (e) {
-		console.error("ERROR: morfeusz_analyzer not found or failed:", (e as Error).message);
+		console.error(
+			"ERROR: morfeusz_analyzer not found or failed:",
+			(e as Error).message
+		);
 		process.exit(1);
 	}
 }
@@ -142,38 +226,44 @@ function parseAnalyzerOutput(word: string, output: string): GoldenResult[] {
 	const blockMatch = output.match(/\[[\s\S]*?\]/);
 	if (!blockMatch) return [];
 
-	const block = blockMatch[0]
-		.replace(/^\[/, "")
-		.replace(/\]$/, "")
-		.trim();
+	const block = blockMatch[0].replace(/^\[/, "").replace(/\]$/, "").trim();
 
 	if (!block) return [];
 
 	// First interp is flush against "["; subsequent ones have a leading space.
-	const lines = block.split(/\n /).map(l => l.trim()).filter(Boolean);
+	const lines = block
+		.split(/\n /)
+		.map((l) => l.trim())
+		.filter(Boolean);
 
-	return lines.map(line => {
+	return lines.map((line) => {
 		// Fields (comma-separated):
 		//   0: startNode  1: endNode  2: orth  3: lemma  4: tag
 		//   5: name       6+: labels (may be "_" or "label1|label2")
 		const parts = line.split(",");
-		const orth   = parts[2] ?? word;
-		const lemma  = parts[3] ?? "";
-		const tag    = parts[4] ?? "";
-		const name   = parts[5] ?? "";
+		const orth = parts[2] ?? word;
+		const lemma = parts[3] ?? "";
+		const tag = parts[4] ?? "";
+		const name = parts[5] ?? "";
 		const rawLabels = parts.slice(6);
 		const labels =
 			rawLabels.length === 0 ||
 			(rawLabels.length === 1 && rawLabels[0] === "_")
 				? []
 				: rawLabels
-					.flatMap(t => t.split("|"))
-					.map(t => t.trim())
-					.filter(t => t.length > 0 && t !== "_");
+						.flatMap((t) => t.split("|"))
+						.map((t) => t.trim())
+						.filter((t) => t.length > 0 && t !== "_");
 
 		return {
-			orth, lemma, tag, name, labels,
-			tagId: null, nameId: null, labelsId: null,
+			orth,
+			lemma,
+			tag,
+			name,
+			labels,
+			tagId: null,
+			nameId: null,
+			labelsId: null
 		};
 	});
 }
@@ -182,31 +272,41 @@ function parseAnalyzerOutput(word: string, output: string): GoldenResult[] {
 // CLI parsing
 // ---------------------------------------------------------------------------
 const args = process.argv.slice(2);
-let useAll   = false;
+let useAll = false;
 let dictName = "sgjp";
 let outDir: string | null = null;
-let dryRun   = false;
+let dryRun = false;
 const extraWords: string[] = [];
 
 for (let i = 0; i < args.length; i++) {
 	const a = args[i]!;
-	if (a === "--all")                        { useAll = true; }
-	else if (a === "--dry-run")               { dryRun = true; }
-	else if (a === "--dict" && args[i + 1])   { dictName = args[++i]!; }
-	else if (a === "--out"  && args[i + 1])   { outDir   = args[++i]!; }
-	else if (!a.startsWith("--"))             { extraWords.push(a); }
+	if (a === "--all") {
+		useAll = true;
+	} else if (a === "--dry-run") {
+		dryRun = true;
+	} else if (a === "--dict" && args[i + 1]) {
+		dictName = args[++i]!;
+	} else if (a === "--out" && args[i + 1]) {
+		outDir = args[++i]!;
+	} else if (!a.startsWith("--")) {
+		extraWords.push(a);
+	}
 }
 
 const wordList = extraWords.length > 0 ? extraWords : WORD_LIST;
 if (extraWords.length === 0 && !useAll) {
-	console.log("No words specified — using full WORD_LIST. Pass --all to suppress this note.");
+	console.log(
+		"No words specified — using full WORD_LIST. Pass --all to suppress this note."
+	);
 }
 
 // ---------------------------------------------------------------------------
 // Output directory
 // ---------------------------------------------------------------------------
-const root       = fileURLToPath(new URL("..", import.meta.url));
-const fixtureDir = resolve(outDir ?? join(root, "test", "fixtures", "golden", dictName + "-a"));
+const root = fileURLToPath(new URL("..", import.meta.url));
+const fixtureDir = resolve(
+	outDir ?? join(root, "test", "fixtures", "golden", dictName + "-a")
+);
 
 if (!dryRun) {
 	mkdirSync(fixtureDir, { recursive: true });
@@ -220,35 +320,52 @@ console.log("Generator: " + analyzerVersion + "\n");
 // Main loop
 // ---------------------------------------------------------------------------
 let written = 0;
-let errors  = 0;
+let errors = 0;
 
 for (const word of wordList) {
 	try {
 		const { stdout } = analyze(word, dictName);
-		const results    = parseAnalyzerOutput(word, stdout);
+		const results = parseAnalyzerOutput(word, stdout);
 
 		const fixture: GoldenFixture = {
 			word,
 			dict: dictName,
 			generatedAt: new Date().toISOString(),
 			generatedBy: analyzerVersion,
-			results,
+			results
 		};
 
 		if (dryRun) {
 			const summary =
 				results.length === 0
 					? "(not in dict)"
-					: results.map(r => r.lemma).join(", ");
-			console.log("[dry-run]  " + word.padEnd(24) + "  " + String(results.length) + " interp(s): " + summary);
+					: results.map((r) => r.lemma).join(", ");
+			console.log(
+				"[dry-run]  " +
+					word.padEnd(24) +
+					"  " +
+					String(results.length) +
+					" interp(s): " +
+					summary
+			);
 			continue;
 		}
 
 		// Safe filename: NFC + replace filesystem-unsafe chars
 		const safeName = word.normalize("NFC").replace(/[/\\:*?"<>|]/g, "_");
-		const outPath  = join(fixtureDir, safeName + ".json");
-		writeFileSync(outPath, JSON.stringify(fixture, null, "\t") + "\n", "utf-8");
-		console.log("  ✓  " + word.padEnd(24) + " → " + String(results.length) + " interp(s)");
+		const outPath = join(fixtureDir, safeName + ".json");
+		writeFileSync(
+			outPath,
+			JSON.stringify(fixture, null, "\t") + "\n",
+			"utf-8"
+		);
+		console.log(
+			"  ✓  " +
+				word.padEnd(24) +
+				" → " +
+				String(results.length) +
+				" interp(s)"
+		);
 		written++;
 	} catch (err) {
 		console.error("  ✗  " + word + ": " + (err as Error).message);
@@ -257,8 +374,16 @@ for (const word of wordList) {
 }
 
 if (!dryRun) {
-	console.log("\n" + String(written) + " fixture(s) written, " + String(errors) + " error(s).");
+	console.log(
+		"\n" +
+			String(written) +
+			" fixture(s) written, " +
+			String(errors) +
+			" error(s)."
+	);
 	if (errors === 0) {
-		console.log("Commit the fixtures and run: pnpm test test/golden.test.ts");
+		console.log(
+			"Commit the fixtures and run: pnpm test test/golden.test.ts"
+		);
 	}
 }

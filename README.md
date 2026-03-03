@@ -19,8 +19,8 @@ const it = m.analyse("Ala ma kota");
 while (it.hasNext()) console.log(it.next());
 
 // Toggle case policy as needed
-m.strictCase();     // only matching-case interpretations
-m.ignoreCase();     // accept all interpretations
+m.strictCase(); // only matching-case interpretations
+m.ignoreCase(); // accept all interpretations
 
 // Generator example (stubbed until generator is wired)
 const gen = new MorfeuszImpl("sgjp", MorfeuszUsage.GENERATE_ONLY);
@@ -38,15 +38,15 @@ console.log(gen.generate("kot"));
 Loading real dictionaries is supported. The repository looks for `.dict` files using simple search paths and conventional filenames.
 
 - File naming: analyzer vs generator
-	- Analyzer: `<name>-a.dict` (e.g. `sgjp-a.dict`)
-	- Generator: `<name>-s.dict` (e.g. `sgjp-s.dict`)
+    - Analyzer: `<name>-a.dict` (e.g. `sgjp-a.dict`)
+    - Generator: `<name>-s.dict` (e.g. `sgjp-s.dict`)
 
 - Default search paths:
-	- Current working directory (`.`)
-	- `morfeusz2/dict` inside this project
+    - Current working directory (`.`)
+    - `morfeusz2/dict` inside this project
 
 - Custom search paths:
-	- Set `DictionariesRepository.dictionarySearchPaths` at startup to include additional directories.
+    - Set `DictionariesRepository.dictionarySearchPaths` at startup to include additional directories.
 
 ```ts
 import { DictionariesRepository } from "morfeusz-ts";
@@ -54,11 +54,12 @@ import { DictionariesRepository } from "morfeusz-ts";
 DictionariesRepository.dictionarySearchPaths = [
 	"/opt/morfeusz/dicts",
 	"/home/user/dicts",
-	"./morfeusz2/dict", // keep project default
+	"./morfeusz2/dict" // keep project default
 ];
 ```
 
 - Usage example:
+
 ```ts
 import { MorfeuszImpl, MorfeuszUsage } from "morfeusz-ts";
 
@@ -68,6 +69,7 @@ console.log(m.analyse("Ala ma kota").next());
 ```
 
 Troubleshooting:
+
 - If `load()` throws "Dictionary not found", confirm filenames and that the directories are included in `DictionariesRepository.dictionarySearchPaths`.
 - Some dictionaries use CFSA2; this backend is implemented and supported.
 
