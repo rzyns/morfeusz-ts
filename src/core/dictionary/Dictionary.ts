@@ -4,17 +4,20 @@ import { MorphDeserializer } from "../deserialization/MorphDeserializer.js";
 import { InterpsGroupsReader } from "../deserialization/InterpsGroupsReader.js";
 import { parseFsaHeader, type FsaHeader } from "../fsa/header.js";
 import { SimpleFSA, CFSA1, CFSA2 } from "../fsa/FSA.js";
+import { parseEpilogue, type DictEpilogue } from "./EpilogueParser.js";
 
 export class Dictionary {
 	readonly buffer: DataView;
 	readonly deserializer: Deserializer<InterpsGroupsReader>;
 	readonly header: FsaHeader;
+	readonly epilogue: DictEpilogue;
+
 	constructor(buf: ArrayBuffer) {
 		this.buffer = new DataView(buf);
 		this.deserializer = new MorphDeserializer();
 		this.header = parseFsaHeader(this.buffer);
+		this.epilogue = parseEpilogue(this.buffer, this.header.epilogueOffset);
 	}
-	// TODO: parse epilogue to fill id/copyright, separators and segrules maps
 
 	createFSA<T>(deserializer: Deserializer<T>, outFactory: () => T): FSA<T> {
 		switch (this.header.impl) {

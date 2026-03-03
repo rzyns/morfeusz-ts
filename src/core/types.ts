@@ -34,8 +34,14 @@ export interface MorphInterpretation {
 	orth: string;
 	lemma: string;
 	tagId: number;
+	/** Resolved tag string (e.g. "subst:sg:nom:m1"). Empty string when IdResolver is stub. */
+	tag: string;
 	nameId: number;
+	/** Resolved name string (e.g. "nazwa_pospolita"). Empty string when IdResolver is stub. */
+	name: string;
 	labelsId: number;
+	/** Resolved labels string (e.g. "pot.,środ."). Empty string when IdResolver is stub. */
+	labels: string;
 }
 
 export const MorphInterpretation = {
@@ -51,8 +57,11 @@ export const MorphInterpretation = {
 			orth,
 			lemma,
 			tagId: 0,
+			tag: "ign",
 			nameId: 0,
-			labelsId: 0
+			name: "",
+			labelsId: 0,
+			labels: ""
 		};
 	},
 	createWhitespace(
@@ -66,8 +75,11 @@ export const MorphInterpretation = {
 			orth,
 			lemma: orth,
 			tagId: 1,
+			tag: "sp",
 			nameId: 0,
-			labelsId: 0
+			name: "",
+			labelsId: 0,
+			labels: ""
 		};
 	}
 };

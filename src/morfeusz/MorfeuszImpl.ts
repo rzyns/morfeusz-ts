@@ -16,6 +16,8 @@ import type { FSA } from "../core/fsa/FSA.js";
 import { InterpsGroupsReader } from "../core/deserialization/InterpsGroupsReader.js";
 import { InterpsGroupsDecoder } from "../core/deserialization/InterpsGroupsDecoder.js";
 import { MorphDeserializer } from "../core/deserialization/MorphDeserializer.js";
+import { decodeGeneratorPayload } from "../core/deserialization/GeneratorDecoder.js";
+import { DictIdResolver } from "../core/dictionary/DictIdResolver.js";
 
 export class MorfeuszImpl {
 	private usage: MorfeuszUsage;
@@ -120,12 +122,14 @@ export class MorfeuszImpl {
 		this.ensureIsGenerator();
 		if (/\s/.test(lemma))
 			throw new MorfeuszException("Input contains more than one word");
-		// No dictionary yet: return ign with orth=lemma, lemma=lemma
-		return [MI.createIgn(0, 1, lemma, lemma)];
+		// The generator FSA is keyed on lemma strings (same FSA-walk logic as analyser).
+		// The payload format is different: each interp encodes the generated orth + tag.
+		const payload = this.recognizePayload(lemma);
+		if (!payload) return [MI.createIgn(0, 1, lemma, lemma)];
+		return decodeGeneratorPayload(payload.orthForLemma, payload.reader, this.getIdResolver());
 	}
 
 	generateWithTag(lemma: string, tagId: number): MorphInterpretation[] {
-		// Tag filtering is not meaningful without dictionaries; return generate(lemma)
 		return this.generate(lemma).filter((m) => m.tagId === tagId);
 	}
 
@@ -267,6 +271,8 @@ export class MorfeuszImpl {
 			deser,
 			() => new InterpsGroupsReader()
 		);
+		// Wire up real tag/name/label resolver from the parsed epilogue
+		this.idResolver = new DictIdResolver(this.dictionary.epilogue);
 	}
 
 	isLoaded(): boolean {

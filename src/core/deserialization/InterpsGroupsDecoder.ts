@@ -85,7 +85,7 @@ export class InterpsGroupsDecoder {
 	decode(
 		orth: string,
 		reader: InterpsGroupsReader,
-		_ids: IdResolver,
+		ids: IdResolver,
 		handling: CaseHandling = CaseHandling.CONDITIONALLY_CASE_SENSITIVE,
 		orthForLemma: string = orth
 	): MorphInterpretation[] {
@@ -178,8 +178,11 @@ export class InterpsGroupsDecoder {
 					orth,
 					lemma,
 					tagId,
+					tag: ids.getTag(tagId),
 					nameId,
-					labelsId
+					name: ids.getName(nameId),
+					labelsId,
+					labels: ids.getLabelsAsString(labelsId)
 				});
 			}
 
@@ -205,8 +208,11 @@ export class InterpsGroupsDecoder {
 				orth,
 				lemma: orth,
 				tagId: 0,
+				tag: "ign",
 				nameId: 0,
-				labelsId: 0
+				name: "",
+				labelsId: 0,
+				labels: ""
 			}];
 		}
 		return results;
