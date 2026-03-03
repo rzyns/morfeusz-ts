@@ -1,4 +1,4 @@
-# Morfeusz-TS
+# morfeusz-ts
 
 TypeScript port of Morfeusz2 with FSA backends (Simple, CFSA1, CFSA2), payload decoding, and case-aware analysis.
 
