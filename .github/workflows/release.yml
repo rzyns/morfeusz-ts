@@ -30,30 +30,8 @@ jobs:
             - name: Install dependencies
               run: pnpm install --frozen-lockfile
 
-            - name: Resolve latest SGJP dict version
-              id: dict-version
-              run: |
-                  LATEST=$(curl -fsSL https://download.sgjp.pl/morfeusz/ \
-                    | grep -o 'href="[0-9]\{8\}/"' \
-                    | sed 's/href="//; s/\/"//' \
-                    | sort -r | head -1)
-                  echo "version=${LATEST}" >> "$GITHUB_OUTPUT"
-
-            - name: Cache SGJP dictionary
-              id: dict-cache
-              uses: actions/cache@v4
-              with:
-                  path: morfeusz2/dict
-                  key: sgjp-dict-${{ steps.dict-version.outputs.version }}
-
-            - name: Download SGJP dictionary
-              if: steps.dict-cache.outputs.cache-hit != 'true'
-              run: |
-                  VERSION=${{ steps.dict-version.outputs.version }}
-                  mkdir -p morfeusz2/dict
-                  curl -fsSL \
-                    "https://download.sgjp.pl/morfeusz/${VERSION}/morfeusz2-dictionary-sgjp-${VERSION}.tgz" \
-                    | tar xzf - -C morfeusz2/dict sgjp-a.dict sgjp-s.dict
+            # sgjp-a.dict and sgjp-s.dict are committed under morfeusz2/dict/
+            # — no download from sgjp.pl required.
 
             - name: Typecheck
               run: pnpm run typecheck
