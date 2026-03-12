@@ -52,16 +52,15 @@ jobs:
                   OUTPUT: CHANGELOG_RELEASE.md
                   GITHUB_REPO: ${{ github.repository }}
 
-      
-      # -----------------------------------------------------------------------
-      # Publish to GitHub Packages
-      # -----------------------------------------------------------------------
-      - name: Publish to GitHub Packages
-        run: pnpm publish --no-git-checks --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            # -----------------------------------------------------------------------
+            # Publish to GitHub Packages
+            # -----------------------------------------------------------------------
+            - name: Publish to GitHub Packages
+              run: pnpm publish --no-git-checks --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pack npm tarball
+            - name: Pack npm tarball
               run: pnpm pack --pack-destination release-artifacts
 
             - name: Create GitHub Release
