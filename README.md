@@ -77,3 +77,18 @@ Troubleshooting:
 
 - Implemented: FSA backends (SimpleFSA, CFSA1, CFSA2), dictionary header parsing, payload decoder with lemma assembly and case handling; configurable dictionary search paths.
 - In progress: Full epilogue parsing, generator wiring, robust IdResolver mappings.
+
+## Attribution
+
+This library is a TypeScript port of [Morfeusz2](https://morfeusz.sgjp.pl/), a morphological
+analyzer and generator for Polish, originally developed at the Institute of Computer Science,
+Polish Academy of Sciences (IPI PAN).
+
+**Morfeusz2**
+Copyright © 2014 by Institute of Computer Science, Polish Academy of Sciences. All rights reserved.
+Licensed under the BSD 2-Clause License.
+
+The SGJP and Polimorf dictionary data used by this library are also Copyright © Institute of
+Computer Science, Polish Academy of Sciences, and are available under the same BSD 2-Clause terms.
+
+See [NOTICE](./NOTICE) for full attribution details.

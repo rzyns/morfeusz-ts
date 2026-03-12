@@ -1,3 +1,7 @@
+// Ported from Morfeusz2 (https://morfeusz.sgjp.pl/)
+// Copyright © 2014, Institute of Computer Science, Polish Academy of Sciences.
+// Original BSD 2-Clause License applies. See NOTICE for details.
+
 import { CaseHandling } from "../../core/types.js";
 
 export class CaseConverter {

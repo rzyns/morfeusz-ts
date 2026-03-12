@@ -1,3 +1,7 @@
+// Ported from Morfeusz2 (https://morfeusz.sgjp.pl/)
+// Copyright © 2014, Institute of Computer Science, Polish Academy of Sciences.
+// Original BSD 2-Clause License applies. See NOTICE for details.
+
 import { MorfeuszProcessorType } from "./const.js";
 import { FILESYSTEM_PATH_SEPARATOR } from "./const.js";
 import { readFile } from "node:fs/promises";

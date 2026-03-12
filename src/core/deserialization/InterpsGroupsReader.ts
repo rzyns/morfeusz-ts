@@ -1,3 +1,7 @@
+// Ported from Morfeusz2 (https://morfeusz.sgjp.pl/)
+// Copyright © 2014, Institute of Computer Science, Polish Academy of Sciences.
+// Original BSD 2-Clause License applies. See NOTICE for details.
+
 export interface InterpsGroup {
 	type: number;
 	ptr: number; // offset within backing buffer, points at the group's compression byte

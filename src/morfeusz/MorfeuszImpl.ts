@@ -1,3 +1,7 @@
+// Ported from Morfeusz2 (https://morfeusz.sgjp.pl/)
+// Copyright © 2014, Institute of Computer Science, Polish Academy of Sciences.
+// Original BSD 2-Clause License applies. See NOTICE for details.
+
 import type { IdResolver, MorphInterpretation } from "../core/types.js";
 import {
 	Charset,
